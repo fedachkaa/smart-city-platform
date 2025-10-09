@@ -21,6 +21,15 @@ class UserRole extends Model
         'name',
     ];
 
+    const USER_ROLE_GUEST = 'Guest';
+    const USER_ROLE_OPERATOR = 'Operator';
+    const USER_ROLE_ADMIN = 'Administrator';
+
+    const ALLOWED_ADMIN_ROLES = [
+        self::USER_ROLE_OPERATOR,
+        self::USER_ROLE_ADMIN,
+    ];
+
     /**
      * @return HasMany
      */
