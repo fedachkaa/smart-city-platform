@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('head')
+    @vite('resources/js/admin-dashboard.js')
+@endsection
+
 @section('content')
     <main class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -29,7 +33,42 @@
                         </div>
                     </div>
                 @endforeach
+            </div>
 
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
+                <div class="bg-white shadow-lg rounded-lg p-6 lg:col-span-1">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4 border-b pb-2">Objects by Type</h3>
+                    <div style="height: 300px;">
+                        <canvas id="objectsByTypeChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="bg-white shadow-lg rounded-lg p-6 lg:col-span-2">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4 border-b pb-2">Status Distribution & Quick Statistics</h3>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div style="max-height: 300px;">
+                            <canvas id="objectsByStatusChart"></canvas>
+                        </div>
+
+                        <div>
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Metric</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Value</th>
+                                </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200 text-sm">
+                                <tr><td class="px-4 py-2 font-medium">Total Active</td><td class="px-4 py-2 text-green-600">{{ $stats['active_objects'] }}</td></tr>
+                                <tr><td class="px-4 py-2 font-medium">Total Errors</td><td class="px-4 py-2 text-red-600">{{ $stats['error_objects'] }}</td></tr>
+                                <tr><td class="px-4 py-2 font-medium">Under Maintenance</td><td class="px-4 py-2 text-yellow-600">{{ $stats['maintenance_objects'] }}</td></tr>
+                                <tr><td class="px-4 py-2 font-medium">Total Registered</td><td class="px-4 py-2 font-bold">{{ $stats['total_objects'] }}</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="bg-white shadow-lg rounded-lg overflow-hidden">
@@ -63,4 +102,14 @@
 
         </div>
     </main>
+
+    @push('scripts')
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                if (typeof window.initializeCharts === 'function') {
+                    window.initializeCharts(@json($chartData));
+                }
+            });
+        </script>
+    @endpush
 @endsection

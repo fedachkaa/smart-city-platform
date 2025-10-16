@@ -24,13 +24,25 @@ class DashboardController extends Controller
             'error_objects' => InfrastructureObject::where('status', InfrastructureObjectStatus::Error)->count(),
         ];
 
-        $recentObjects = InfrastructureObject::orderBy('created_at', 'desc')->take(5)->get();
+        $chartDataByType = InfrastructureObject::selectRaw('type, count(*) as count')
+            ->groupBy('type')
+            ->pluck('count', 'type')
+            ->toArray();
+
+        $chartDataByStatus = InfrastructureObject::selectRaw('status, count(*) as count')
+            ->groupBy('status')
+            ->pluck('count', 'status')
+            ->toArray();
 
         $data = [
             'userName' => $user->name,
             'userRole' => $userRoleName,
             'stats' => $stats,
-            'recentObjects' => $recentObjects,
+            'recentObjects' => InfrastructureObject::orderBy('created_at', 'desc')->take(5)->get(),
+            'chartData' => [
+                'byType' => $chartDataByType,
+                'byStatus' => $chartDataByStatus,
+            ],
         ];
 
         return view('admin.index', $data);

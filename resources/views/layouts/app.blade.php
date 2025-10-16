@@ -11,19 +11,21 @@
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet"/>
 
     @vite('resources/css/app.css')
+    @yield('head')
 </head>
 <body class="font-sans antialiased bg-gray-100">
-<div class="min-h-screen">
+    <div class="min-h-screen">
 
-    @if (in_array(Auth::user()?->role?->name, \App\Models\UserRole::ALLOWED_ADMIN_ROLES))
-        @include('layouts.admin_navigation')
-    @endif
+        @if (in_array(Auth::user()?->role?->name, \App\Models\UserRole::ALLOWED_ADMIN_ROLES))
+            @include('layouts.admin_navigation')
+        @endif
 
-    <main>
-        @yield('content')
-    </main>
-</div>
+        <main>
+            @yield('content')
+        </main>
+    </div>
 
-@vite('resources/js/app.js')
+    @vite('resources/js/app.js')
+    @stack('scripts')
 </body>
 </html>
