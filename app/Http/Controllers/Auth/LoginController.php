@@ -19,7 +19,7 @@ class LoginController extends Controller
     public function showLoginForm(): View|RedirectResponse
     {
         if (Auth::user()) {
-            return redirect()->to($this->getRedirectPath(Auth::user()->load('role'))); //($this->getRedirectPath(Auth::user()));
+            return redirect()->to($this->getRedirectPath(Auth::user()->load('role')));
         }
 
         return view('auth.login');
