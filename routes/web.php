@@ -3,16 +3,19 @@
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\InfrastructureObjectController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Map\MapController;
 use App\Models\UserRole;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('homepage');
 
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login'])->name('login.post');
 Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
+
+Route::get('/api/map/objects', [MapController::class, 'index'])->name('api.map.objects');
 
 Route::middleware(['auth', 'role:' . implode(',' , UserRole::ALLOWED_ADMIN_ROLES)])->group(function () {
     Route::group(['prefix' => 'dashboard', 'as' => 'dashboard.'], function () {
