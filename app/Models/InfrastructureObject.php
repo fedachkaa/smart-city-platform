@@ -45,4 +45,52 @@ class InfrastructureObject extends Model
     {
         return $this->belongsTo(User::class, 'created_by');
     }
+
+    /**
+     * Scope a query to filter by name.
+     */
+    public function scopeSearchByName($query, $name)
+    {
+        if ($name) {
+            return $query->where('name', 'like', '%' . $name . '%');
+        }
+
+        return $query;
+    }
+
+    /**
+     * Scope a query to filter by type.
+     */
+    public function scopeOfType($query, $type)
+    {
+        if ($type) {
+            return $query->where('type', $type);
+        }
+
+        return $query;
+    }
+
+    /**
+     * Scope a query to filter by status.
+     */
+    public function scopeOfStatus($query, $status)
+    {
+        if ($status) {
+            return $query->where('status', $status);
+        }
+
+        return $query;
+    }
+
+    /**
+     * Scope a query to filter by district.
+     */
+    public function scopeOfDistrict($query, $district)
+    {
+        if ($district) {
+            return $query->where('district', 'like', '%' . $district . '%');
+        }
+
+        return $query;
+    }
 }

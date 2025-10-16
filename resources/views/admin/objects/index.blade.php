@@ -21,6 +21,11 @@
                 </div>
             @endif
 
+            @include('admin.objects.search_form', [
+                'allStatuses' => $allStatuses,
+                'allTypes' => $allTypes,
+            ])
+
             <div class="bg-white overflow-hidden shadow-lg rounded-lg">
                 <div class="p-6">
                     <table class="min-w-full divide-y divide-gray-200">

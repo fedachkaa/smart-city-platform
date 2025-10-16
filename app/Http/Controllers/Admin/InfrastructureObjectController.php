@@ -17,11 +17,21 @@ class InfrastructureObjectController extends Controller
     /**
      * @return Factory|View
      */
-    public function index()
+    public function index(Request $request)
     {
-        $objects = InfrastructureObject::with('creator')->paginate(15);
+        $allTypes = array_column(\App\Enums\InfrastructureObjectType::cases(), 'value');
+        $allStatuses = array_column(\App\Enums\InfrastructureObjectStatus::cases(), 'value');
 
-        return view('admin.objects.index', compact('objects'));
+        $query = InfrastructureObject::with('creator');
+
+        $query->searchByName($request->get('name'))
+            ->ofStatus($request->get('status'))
+            ->ofType($request->get('type'))
+            ->ofDistrict($request->get('district'));
+
+        $objects = $query->paginate(15)->withQueryString();
+
+        return view('admin.objects.index', compact('objects', 'allTypes', 'allStatuses'));
     }
 
     /**
