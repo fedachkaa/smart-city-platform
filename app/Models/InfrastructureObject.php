@@ -24,8 +24,9 @@ class InfrastructureObject extends Model
         'latitude',
         'longitude',
         'description',
-        'district',
         'created_by',
+        'city_id',
+        'district_id',
     ];
 
     /**
@@ -44,6 +45,22 @@ class InfrastructureObject extends Model
     public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function city(): BelongsTo
+    {
+        return $this->belongsTo(City::class, 'city_id');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function district(): BelongsTo
+    {
+        return $this->belongsTo(District::class, 'district_id');
     }
 
     /**
@@ -83,12 +100,12 @@ class InfrastructureObject extends Model
     }
 
     /**
-     * Scope a query to filter by district.
+     * Scope a query to filter by district id.
      */
     public function scopeOfDistrict($query, $district)
     {
         if ($district) {
-            return $query->where('district', 'like', '%' . $district . '%');
+            return $query->where('district_id', $district);
         }
 
         return $query;

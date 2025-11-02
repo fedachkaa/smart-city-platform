@@ -10,17 +10,24 @@
         </div>
 
         <div class="space-y-1">
-            <label for="district" class="block text-sm font-medium text-gray-700">District</label>
-            <input type="text" name="district" id="district" value="{{ old('district', $object->district ?? '') }}" class="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm p-2 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition duration-150 sm:text-sm">
-            @error('district')<p class="text-xs text-red-500 mt-1">{{ $message }}</p>@enderror
+            <label for="district_id" class="block text-sm font-medium text-gray-700">District</label>
+            <select name="district_id" id="district_id" class="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm p-2 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition duration-150 sm:text-sm">
+                <option value="">All Districts</option>
+                @foreach ($allDistricts as $district)
+                    <option value="{{ $district['id'] }}" @if(old('type', $object->district_id ?? '') === $district['id']) selected @endif>>
+                        {{ $district['name'] }}
+                    </option>
+                @endforeach
+            </select>
+            @error('district_id')<p class="text-xs text-red-500 mt-1">{{ $message }}</p>@enderror
         </div>
 
         <div class="space-y-1">
             <label for="type" class="block text-sm font-medium text-gray-700">Type</label>
             <select name="type" id="type" required class="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm p-2 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 sm:text-sm">
-                @foreach ($types as $type)
-                    <option value="{{ $type->value }}" @if(old('type', $object->type->value ?? '') === $type->value) selected @endif>
-                        {{ $type->value }}
+                @foreach ($allTypes as $type)
+                    <option value="{{ $type }}" @if(old('type', $object->type ?? '') === $type) selected @endif>
+                        {{ $type }}
                     </option>
                 @endforeach
             </select>
@@ -30,9 +37,9 @@
         <div class="space-y-1">
             <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
             <select name="status" id="status" required class="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm p-2 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 sm:text-sm">
-                @foreach ($statuses as $status)
-                    <option value="{{ $status->value }}" @if(old('status', $object->status->value ?? '') === $status->value) selected @endif>
-                        {{ $status->value }}
+                @foreach ($allStatuses as $status)
+                    <option value="{{ $status }}" @if(old('status', $object->status ?? '') === $status) selected @endif>
+                        {{ $status }}
                     </option>
                 @endforeach
             </select>

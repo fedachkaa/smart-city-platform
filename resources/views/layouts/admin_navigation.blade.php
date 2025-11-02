@@ -17,10 +17,7 @@
 
             <div class="flex items-center">
                 <span class="text-sm text-gray-600 mr-4">{{ Auth::user()->name }} ({{ Auth::user()->role->name ?? 'User' }})</span>
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button type="submit" class="text-sm text-red-500 hover:text-red-700 transition duration-150 cursor-pointer">Logout</button>
-                </form>
+                <a href="{{ route('logout') ?? '#' }}" class="text-sm text-red-500 hover:text-red-700 transition duration-150 cursor-pointer">Logout</a>
             </div>
         </div>
     </div>

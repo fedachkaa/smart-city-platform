@@ -5,12 +5,14 @@ namespace App\Http\Controllers\Admin;
 use App\Enums\InfrastructureObjectStatus;
 use App\Enums\InfrastructureObjectType;
 use App\Http\Controllers\Controller;
+use App\Models\District;
 use App\Models\InfrastructureObject;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class InfrastructureObjectController extends Controller
 {
@@ -19,19 +21,16 @@ class InfrastructureObjectController extends Controller
      */
     public function index(Request $request)
     {
-        $allTypes = array_column(\App\Enums\InfrastructureObjectType::cases(), 'value');
-        $allStatuses = array_column(\App\Enums\InfrastructureObjectStatus::cases(), 'value');
-
         $query = InfrastructureObject::with('creator');
 
         $query->searchByName($request->get('name'))
             ->ofStatus($request->get('status'))
             ->ofType($request->get('type'))
-            ->ofDistrict($request->get('district'));
+            ->ofDistrict($request->get('district_id'));
 
         $objects = $query->paginate(15)->withQueryString();
 
-        return view('admin.objects.index', compact('objects', 'allTypes', 'allStatuses'));
+        return view('admin.objects.index', array_merge(compact('objects'), $this->getFormOptions()));
     }
 
     /**
@@ -39,10 +38,7 @@ class InfrastructureObjectController extends Controller
      */
     public function create()
     {
-        $types = InfrastructureObjectType::cases();
-        $statuses = InfrastructureObjectStatus::cases();
-
-        return view('admin.objects.create', compact('types', 'statuses'));
+        return view('admin.objects.create', $this->getFormOptions());
     }
 
     /**
@@ -58,10 +54,11 @@ class InfrastructureObjectController extends Controller
             'latitude' => 'required|numeric|between:-90,90',
             'longitude' => 'required|numeric|between:-180,180',
             'description' => 'nullable|string',
-            'district' => 'nullable|string|max:100',
+            'district_id' => ['nullable', 'integer', Rule::exists('districts', 'id')->where('city_id', config('app.current_city_id'))],
         ]);
 
         $validatedData['created_by'] = Auth::id();
+        $validatedData['city_id'] = config('app.current_city_id');
 
         InfrastructureObject::create($validatedData);
 
@@ -74,10 +71,7 @@ class InfrastructureObjectController extends Controller
      */
     public function edit(InfrastructureObject $object)
     {
-        $types = InfrastructureObjectType::cases();
-        $statuses = InfrastructureObjectStatus::cases();
-
-        return view('admin.objects.edit', compact('object', 'types', 'statuses'));
+        return view('admin.objects.edit', array_merge(compact('object'), $this->getFormOptions()));
     }
 
     /**
@@ -94,7 +88,7 @@ class InfrastructureObjectController extends Controller
             'latitude' => 'required|numeric|between:-90,90',
             'longitude' => 'required|numeric|between:-180,180',
             'description' => 'nullable|string',
-            'district' => 'nullable|string|max:100',
+            'district_id' => ['nullable', 'integer', Rule::exists('districts', 'id')->where('city_id', config('app.current_city_id'))],
         ]);
 
         $object->update($validatedData);
@@ -111,5 +105,19 @@ class InfrastructureObjectController extends Controller
         $object->delete();
 
         return back()->with('success', 'Infrastructure object deleted successfully.');
+    }
+
+    /**
+     * @return array
+     */
+    private function getFormOptions(): array
+    {
+        return [
+            'allTypes' => array_column(InfrastructureObjectType::cases(), 'value'),
+            'allStatuses' => array_column(InfrastructureObjectStatus::cases(), 'value'),
+            'allDistricts' => District::where('city_id', config('app.current_city_id'))
+                ->get(['id', 'name'])
+                ->toArray(),
+        ];
     }
 }

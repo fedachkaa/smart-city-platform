@@ -3,6 +3,15 @@ import laravel from 'laravel-vite-plugin';
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
+    server: {
+        host: '0.0.0.0',
+        port: 5173,
+        strictPort: true,
+        hmr: {
+            host: 'localhost',
+        },
+        cors: true,
+    },
     plugins: [
         laravel({
             input: [
@@ -10,6 +19,7 @@ export default defineConfig({
                 'resources/js/app.js',
                 'resources/js/admin-dashboard.js',
                 'resources/js/map-initializer.js',
+                'resources/js/registration.js'
             ],
             refresh: true,
         }),
