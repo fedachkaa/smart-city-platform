@@ -21,7 +21,7 @@ class MapController extends Controller
             'latitude',
             'longitude',
             'description'
-        ])->get();
+        ])->where('city_id', config('app.current_city_id'))->get();
 
         return response()->json($objects);
     }

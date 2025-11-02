@@ -37,10 +37,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     </div>
                 `;
 
-                const marker = L.marker([obj.latitude, obj.longitude], { icon: icon })
-                    .bindPopup(popupContent);
-
-                markers.push(marker);
+                L.marker([obj.latitude, obj.longitude], { icon: icon })
+                    .bindPopup(popupContent)
+                    .addTo(map);
             });
         })
         .catch(error => console.error('Error fetching map data:', error));

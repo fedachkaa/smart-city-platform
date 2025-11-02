@@ -26,7 +26,8 @@ class InfrastructureObjectController extends Controller
         $query->searchByName($request->get('name'))
             ->ofStatus($request->get('status'))
             ->ofType($request->get('type'))
-            ->ofDistrict($request->get('district_id'));
+            ->ofDistrict($request->get('district_id'))
+            ->where('city_id', config('app.current_city_id'));
 
         $objects = $query->paginate(15)->withQueryString();
 
