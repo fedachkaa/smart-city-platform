@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\InfrastructureObjectController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\PasswordResetController;
+use App\Http\Controllers\Auth\RegistrationController;
 use App\Http\Controllers\Map\MapController;
 use App\Models\UserRole;
 use Illuminate\Support\Facades\Route;
@@ -22,6 +23,9 @@ Route::middleware('guest')->group(function () {
     Route::get('/reset-password/{token}', [PasswordResetController::class, 'resetPasswordForm'])->name('password.reset');
     Route::post('/reset-password', [PasswordResetController::class, 'resetPassword'])->name('password.update');
 });
+Route::get('/registration', [RegistrationController::class, 'showRegistrationForm'])->name('register');
+Route::post('/registration', [RegistrationController::class, 'register'])->name('register.post');
+Route::get('/cities/search', [RegistrationController::class, 'citiesList'])->name('cities.search');
 
 Route::get('/api/map/objects', [MapController::class, 'index'])->name('api.map.objects');
 
