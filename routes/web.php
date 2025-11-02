@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\RegistrationController;
 use App\Http\Controllers\Map\MapController;
+use App\Http\Controllers\UserProfile\ProfileController;
 use App\Models\UserRole;
 use Illuminate\Support\Facades\Route;
 
@@ -35,4 +36,10 @@ Route::middleware(['auth', 'role:' . implode(',' , UserRole::ALLOWED_ADMIN_ROLES
 
         Route::resource('objects', InfrastructureObjectController::class)->names('objects');
     });
+});
+
+Route::middleware(['auth', 'role:' . UserRole::USER_ROLE_GUEST])->prefix('profile')->name('profile.')->group(function () {
+    Route::get('/', [ProfileController::class, 'index'])->name('index');
+    Route::post('profile', [ProfileController::class, 'update'])->name('update');
+    Route::get('/partial/{section}', [ProfileController::class, 'partial'])->name('partial');
 });

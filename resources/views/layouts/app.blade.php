@@ -18,6 +18,8 @@
 
         @if (in_array(Auth::user()?->role?->name, \App\Models\UserRole::ALLOWED_ADMIN_ROLES))
             @include('layouts.admin_navigation')
+        @else
+            @include('layouts.public_navigation')
         @endif
 
         <main>

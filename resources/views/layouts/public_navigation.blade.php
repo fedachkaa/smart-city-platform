@@ -12,7 +12,7 @@
                             Dashboard
                         </a>
                     @else
-                        <a href="#" class="text-sm font-medium text-gray-700 hover:text-cyan-600">
+                        <a href="{{ route('profile.index') }}" class="text-sm font-medium text-gray-700 hover:text-cyan-600">
                             Profile
                         </a>
                     @endif
