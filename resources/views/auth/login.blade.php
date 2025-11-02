@@ -49,7 +49,7 @@
             </form>
 
             <div class="text-center text-sm text-gray-600 border-t pt-4">
-                <a href="/forget-password" class="font-medium text-cyan-600 hover:text-cyan-800 transition duration-150">
+                <a href="/forgot-password" class="font-medium text-cyan-600 hover:text-cyan-800 transition duration-150">
                     Trouble logging in?
                 </a>
             </div>
