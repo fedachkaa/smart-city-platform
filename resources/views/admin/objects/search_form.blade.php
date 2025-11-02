@@ -31,8 +31,15 @@
             </div>
 
             <div>
-                <label for="district" class="block text-sm font-medium text-gray-700">District</label>
-                <input type="text" name="district" id="district" value="{{ request('district') }}" class="p-2  mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm">
+                <label for="district_id" class="block text-sm font-medium text-gray-700">District</label>
+                <select name="district_id" id="district_id" class="p-2 mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm">
+                    <option value="">All Districts</option>
+                    @foreach ($allDistricts as $district)
+                        <option value="{{ $district['id'] }}" @if((int) request('district_id') === $district['id']) selected @endif>
+                            {{ $district['name'] }}
+                        </option>
+                    @endforeach
+                </select>
             </div>
 
             <div class="flex space-x-2">

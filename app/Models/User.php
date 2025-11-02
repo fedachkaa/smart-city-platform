@@ -24,6 +24,8 @@ class User extends Authenticatable implements CanResetPasswordContract
         'name',
         'email',
         'password',
+        'city_id',
+        'district_id',
     ];
 
     /**
@@ -51,5 +53,21 @@ class User extends Authenticatable implements CanResetPasswordContract
     public function role(): BelongsTo
     {
         return $this->belongsTo(UserRole::class, 'role_id');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function city(): BelongsTo
+    {
+        return $this->belongsTo(City::class, 'city_id');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function district(): BelongsTo
+    {
+        return $this->belongsTo(District::class, 'district_id');
     }
 }

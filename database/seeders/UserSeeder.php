@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\City;
 use Illuminate\Database\Seeder;
 use App\Models\User;
 use App\Models\UserRole;
@@ -15,6 +16,7 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         $adminRole = UserRole::where('name', 'Administrator')->first();
+        $city = City::where('name', 'Uzhhorod')->first();
 
         User::firstOrCreate(
             ['email' => 'admin@gmail.com'],
@@ -23,6 +25,7 @@ class UserSeeder extends Seeder
                 'name' => 'System Administrator',
                 'password' => Hash::make('password'),
                 'email_verified_at' => now(),
+                'city_id' => $city->id,
             ]
         );
     }
