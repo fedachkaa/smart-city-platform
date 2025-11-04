@@ -1,11 +1,5 @@
 <h2 class="text-2xl font-bold text-gray-900 pb-3">Edit Profile</h2>
 
-@if(session('success'))
-    <p class="text-sm text-green-700 bg-green-100 p-3 rounded-lg border border-green-300 text-center">
-        {{ session('success') }}
-    </p>
-@endif
-
 <form method="POST" action="{{ route('profile.update') }}" class="space-y-4">
     @csrf
 

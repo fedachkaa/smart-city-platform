@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\UserProfile;
+namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\District;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -16,7 +17,8 @@ class ProfileController extends Controller
      */
     public function index(): View
     {
-        return view('user.profile');
+        $districts = District::select()->where('city_id', config('app.current_city_id'))->get();
+        return view('user.profile', compact('districts'));
     }
 
     /**
@@ -53,26 +55,6 @@ class ProfileController extends Controller
 
         $user->save();
 
-        return redirect()->route('user.profile.edit')->with('success', 'Profile updated successfully!');
-    }
-
-    /**
-     * @param $section
-     * @return View|void
-     */
-    public function partial($section)
-    {
-        switch ($section) {
-            case 'new-report':
-                return view('user.partials.new-report');
-            case 'my-reports':
-                return view('user.partials.my-reports');
-            case 'city-map':
-                return view('user.partials.city-map');
-            case 'edit-profile':
-                return view('user.partials.edit-profile', ['user' => auth()->user()]);
-            default:
-                abort(404);
-        }
+        return redirect()->route('profile.index')->with('success', 'Profile updated successfully!');
     }
 }

@@ -19,7 +19,10 @@ export default defineConfig({
                 'resources/js/app.js',
                 'resources/js/admin-dashboard.js',
                 'resources/js/map-initializer.js',
-                'resources/js/registration.js'
+                'resources/js/registration.js',
+                'resources/js/profile/base.js',
+                'resources/js/profile/new-request.js',
+                'resources/js/profile/requests-list.js'
             ],
             refresh: true,
         }),

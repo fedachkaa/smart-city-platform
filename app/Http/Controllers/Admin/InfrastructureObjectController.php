@@ -55,6 +55,7 @@ class InfrastructureObjectController extends Controller
             'latitude' => 'required|numeric|between:-90,90',
             'longitude' => 'required|numeric|between:-180,180',
             'description' => 'nullable|string',
+            'public_address' => 'required|string|max:255',
             'district_id' => ['nullable', 'integer', Rule::exists('districts', 'id')->where('city_id', config('app.current_city_id'))],
         ]);
 
@@ -89,6 +90,7 @@ class InfrastructureObjectController extends Controller
             'latitude' => 'required|numeric|between:-90,90',
             'longitude' => 'required|numeric|between:-180,180',
             'description' => 'nullable|string',
+            'public_address' => 'required|string|max:255',
             'district_id' => ['nullable', 'integer', Rule::exists('districts', 'id')->where('city_id', config('app.current_city_id'))],
         ]);
 

@@ -52,20 +52,38 @@
     <h3 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">Geographical Coordinates</h3>
     <p class="text-sm text-gray-500 mb-4">Coordinates must be highly accurate (up to 8 decimal places).</p>
 
-    <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-
-        <div class="space-y-1">
-            <label for="latitude" class="block text-sm font-medium text-gray-700">Latitude</label>
-            <input type="number" step="0.00000001" name="latitude" id="latitude" value="{{ old('latitude', $object->latitude ?? '') }}" required class="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm p-2 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 sm:text-sm">
-            @error('latitude')<p class="text-xs text-red-500 mt-1">{{ $message }}</p>@enderror
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+            <label for="latitude" class="block text-sm font-medium text-gray-700 mb-1">
+                Latitude
+            </label>
+            <input type="number" step="0.00000001" name="latitude" id="latitude" value="{{ old('latitude', $object->latitude ?? '') }}" required class="w-full rounded-lg border border-gray-300 shadow-sm p-2 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 sm:text-sm">
+            @error('latitude')
+            <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+            @enderror
         </div>
 
-        <div class="space-y-1">
-            <label for="longitude" class="block text-sm font-medium text-gray-700">Longitude</label>
-            <input type="number" step="0.00000001" name="longitude" id="longitude" value="{{ old('longitude', $object->longitude ?? '') }}" required class="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm p-2 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 sm:text-sm">
-            @error('longitude')<p class="text-xs text-red-500 mt-1">{{ $message }}</p>@enderror
+        <div>
+            <label for="longitude" class="block text-sm font-medium text-gray-700 mb-1">
+                Longitude
+            </label>
+            <input type="number" step="0.00000001" name="longitude" id="longitude" value="{{ old('longitude', $object->longitude ?? '') }}" required class="w-full rounded-lg border border-gray-300 shadow-sm p-2 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 sm:text-sm">
+            @error('longitude')
+            <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+            @enderror
         </div>
     </div>
+
+    <div class="mt-6">
+        <label for="public_address" class="block text-sm font-medium text-gray-700 mb-1">
+            Public address (will be displayed for users)
+        </label>
+        <input type="text" name="public_address" id="public_address" value="{{ old('public_address', $object->public_address ?? '') }}" required class="w-full rounded-lg border border-gray-300 shadow-sm p-2 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 sm:text-sm">
+        @error('public_address')
+        <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+        @enderror
+    </div>
+
 </div>
 
 <div class="mt-6 bg-white p-6 rounded-lg shadow-md">
@@ -83,7 +101,6 @@
 
         <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
 
-            {{-- Created By --}}
             <div>
                 <label class="block text-sm font-medium text-gray-700">Created By</label>
                 <p class="mt-1 text-base font-semibold text-gray-900">
@@ -94,7 +111,6 @@
                 </p>
             </div>
 
-            {{-- Created At --}}
             <div>
                 <label class="block text-sm font-medium text-gray-700">Created At</label>
                 <p class="mt-1 text-base font-semibold text-gray-900">
@@ -105,7 +121,6 @@
                 </p>
             </div>
 
-            {{-- Last Updated At --}}
             <div class="md:col-span-2">
                 <label class="block text-sm font-medium text-gray-700">Last Updated At</label>
                 <p class="mt-1 text-base font-semibold text-gray-900">
