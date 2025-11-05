@@ -12,9 +12,8 @@ use App\Http\Controllers\User\RequestController;
 use App\Models\UserRole;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('homepage');
+Route::get('/', [MapController::class, 'index'])->name('homepage');
+Route::get('/api/map/objects', [MapController::class, 'getMapData'])->name('api.map.objects');
 
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login'])->name('login.post');
@@ -29,8 +28,6 @@ Route::middleware('guest')->group(function () {
 Route::get('/registration', [RegistrationController::class, 'showRegistrationForm'])->name('register');
 Route::post('/registration', [RegistrationController::class, 'register'])->name('register.post');
 Route::get('/cities/search', [RegistrationController::class, 'citiesList'])->name('cities.search');
-
-Route::get('/api/map/objects', [MapController::class, 'index'])->name('api.map.objects');
 
 Route::middleware(['auth', 'role:' . implode(',' , UserRole::ALLOWED_ADMIN_ROLES)])->group(function () {
     Route::group(['prefix' => 'dashboard', 'as' => 'dashboard.'], function () {

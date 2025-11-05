@@ -2,19 +2,18 @@ document.addEventListener('DOMContentLoaded', function () {
     const mapElement = document.getElementById('map');
     if (!mapElement) return;
 
-    const ukraineCenterLat = 48.3794;
-    const ukraineCenterLon = 31.1656;
-    const initialZoom = 6;
-
-    const bounds = [
-        [44.0, 22.0],
-        [52.5, 41.5]
-    ];
+    const { city } = window.appConfig || {};
+    const lat = city?.latitude ?? 50.4501;
+    const lon = city?.longitude ?? 30.5234;
+    const initialZoom = 11;
 
     const map = L.map('map', {
-        maxBounds: bounds,
+        maxBounds: [
+            [44.0, 22.0],
+            [52.5, 41.5]
+        ],
         maxBoundsViscosity: 1.0
-    }).setView([ukraineCenterLat, ukraineCenterLon], initialZoom);
+    }).setView([lat, lon], initialZoom);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
@@ -25,7 +24,6 @@ document.addEventListener('DOMContentLoaded', function () {
     fetch('/api/map/objects')
         .then(response => response.json())
         .then(objects => {
-            const markers = [];
             objects.forEach(obj => {
                 const icon = getMarkerIcon(obj.type, obj.status);
                 const popupContent = `

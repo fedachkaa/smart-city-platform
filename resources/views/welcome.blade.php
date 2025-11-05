@@ -45,3 +45,9 @@
     @vite('resources/js/map-initializer.js')
 </body>
 </html>
+
+<script>
+    window.appConfig = {
+        city: @json($city),
+    };
+</script>
