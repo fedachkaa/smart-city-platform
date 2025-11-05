@@ -68,7 +68,7 @@
                                 <select name="status" id="status" required
                                         class="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm p-2 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 sm:text-sm">
                                     @foreach ($allStatuses as $status)
-                                        <option value="{{ $status }}" @if(old('status', $request->status ?? '') === $status) selected @endif>
+                                        <option value="{{ $status }}" @if(old('status', $request->status->value ?? '') === $status) selected @endif>
                                             {{ ucfirst($status) }}
                                         </option>
                                     @endforeach
