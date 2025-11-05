@@ -21,26 +21,47 @@ document.addEventListener('DOMContentLoaded', function () {
         maxZoom: 18
     }).addTo(map);
 
+    let heatLayer = null;
+
     fetch('/api/map/objects')
         .then(response => response.json())
         .then(objects => {
+            const heatData = [];
+
             objects.forEach(obj => {
+                if (obj.latitude && obj.longitude) {
+                    heatData.push([obj.latitude, obj.longitude, 0.6]); // third = intensity
+                }
+
                 const icon = getMarkerIcon(obj.type, obj.status);
                 const popupContent = `
-                    <div style="font-size: 14px;">
-                        <h4 style="font-weight: bold; margin-bottom: 5px; color: ${icon.options.html.includes('red') ? '#dc2626' : '#1e40af'};">${obj.name} (${obj.type})</h4>
-                        <p>Status: <strong>${obj.status}</strong></p>
-                        <p>Description: ${obj.description ? obj.description.substring(0, 50) + '...' : 'N/A'}</p>
-                        <p class="text-xs mt-2">Lat: ${obj.latitude}, Lon: ${obj.longitude}</p>
-                    </div>
-                `;
+                <div style="font-size: 14px;">
+                    <h4 style="font-weight: bold; margin-bottom: 5px;">${obj.name} (${obj.type})</h4>
+                    <p>Status: <strong>${obj.status}</strong></p>
+                    <p>${obj.description ? obj.description.substring(0, 50) + '...' : 'N/A'}</p>
+                </div>
+            `;
 
-                L.marker([obj.latitude, obj.longitude], { icon: icon })
-                    .bindPopup(popupContent)
-                    .addTo(map);
+                L.marker([obj.latitude, obj.longitude], { icon }).bindPopup(popupContent).addTo(map);
             });
-        })
-        .catch(error => console.error('Error fetching map data:', error));
+
+            heatLayer = L.heatLayer(heatData, {
+                radius: 20,
+                blur: 15,
+                maxZoom: 12,
+            });
+        });
+
+    const toggle = document.getElementById('heatmap-toggle');
+
+    toggle.addEventListener('change', function () {
+        if (!heatLayer) return;
+        if (toggle.checked) {
+            map.addLayer(heatLayer);
+        } else {
+            map.removeLayer(heatLayer);
+        }
+    });
 
     const getMarkerIcon = (type, status) => {
         let color = '#3388ff';

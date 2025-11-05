@@ -17,7 +17,6 @@
                 $tabs = [
                     'my-requests' => 'My Requests',
                     'new-request' => 'New Request',
-                    'city-map' => 'City Map',
                     'edit-profile' => 'Edit Profile',
                 ];
             @endphp
