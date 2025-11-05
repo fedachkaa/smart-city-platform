@@ -10,6 +10,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class DashboardRequestController extends Controller
 {
@@ -27,12 +28,7 @@ class DashboardRequestController extends Controller
 
         $requests = $query->paginate(15)->withQueryString();
 
-        $allStatuses = array_column(UserRequestStatus::cases(), 'value');
-        $allDistricts = District::where('city_id', config('app.current_city_id'))
-            ->get(['id', 'name'])
-            ->toArray();
-
-        return view('admin.requests.index', array_merge(compact('requests'), ['allStatuses' => $allStatuses, 'allDistricts' => $allDistricts]));
+        return view('admin.requests.index', array_merge(compact('requests'), $this->getFormOptions()));
     }
 
     /**
@@ -41,7 +37,7 @@ class DashboardRequestController extends Controller
      */
     public function edit(UserRequest $request): View
     {
-        return view('admin.requests.edit', compact('request'));
+        return view('admin.requests.edit', array_merge(compact('request'), $this->getFormOptions()));
     }
 
     /**
@@ -51,12 +47,13 @@ class DashboardRequestController extends Controller
      */
     public function update(Request $httpRequest, UserRequest $request): RedirectResponse
     {
-//        $validated = $httpRequest->validate([
-//            'title' => 'required|string|max:255',
-//            'description' => 'nullable|string',
-//        ]);
-//
-//        $request->update($validated);
+        $validated = $httpRequest->validate([
+            'status' => 'required|string|in:' . implode(',', array_column(UserRequestStatus::cases(), 'value')),
+            'infrastructure_object_id' => ['nullable', Rule::exists('infrastructure_objects', 'id')],
+            'system_notes' => 'nullable|string',
+        ]);
+
+        $request->update($validated);
 
         return redirect()->route('dashboard.requests.index')->with('success', 'Request updated successfully.');
     }
@@ -70,5 +67,18 @@ class DashboardRequestController extends Controller
         $request->delete();
 
         return redirect()->route('dashboard.requests.index')->with('success', 'Request deleted successfully.');
+    }
+
+    /**
+     * @return array
+     */
+    private function getFormOptions(): array
+    {
+        return [
+            'allStatuses' => array_column(UserRequestStatus::cases(), 'value'),
+            'allDistricts' =>  District::where('city_id', config('app.current_city_id'))
+                ->get(['id', 'name'])
+                ->toArray()
+        ];
     }
 }

@@ -36,6 +36,7 @@ Route::middleware(['auth', 'role:' . implode(',' , UserRole::ALLOWED_ADMIN_ROLES
     Route::group(['prefix' => 'dashboard', 'as' => 'dashboard.'], function () {
         Route::get('/', [DashboardController::class, 'index'])->name('index');
         Route::resource('objects', InfrastructureObjectController::class)->names('objects');
+        Route::get('api/objects', [InfrastructureObjectController::class, 'getInfrastructureObjectsList'])->name('api.objects');
         Route::resource('requests', DashboardRequestController::class)->only(['index', 'edit', 'update', 'destroy']);
     });
 });

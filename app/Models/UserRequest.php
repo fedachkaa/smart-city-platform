@@ -16,6 +16,7 @@ class UserRequest extends Model
         'infrastructure_object_id',
         'title',
         'description',
+        'system_notes',
         'status',
         'photo'
     ];

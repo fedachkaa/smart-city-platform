@@ -22,7 +22,8 @@ export default defineConfig({
                 'resources/js/registration.js',
                 'resources/js/profile/base.js',
                 'resources/js/profile/new-request.js',
-                'resources/js/profile/requests-list.js'
+                'resources/js/profile/requests-list.js',
+                'resources/js/admin/user-requests/edit.js',
             ],
             refresh: true,
         }),

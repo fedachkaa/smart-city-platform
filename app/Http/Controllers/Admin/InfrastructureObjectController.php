@@ -9,6 +9,7 @@ use App\Models\District;
 use App\Models\InfrastructureObject;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -108,6 +109,28 @@ class InfrastructureObjectController extends Controller
         $object->delete();
 
         return back()->with('success', 'Infrastructure object deleted successfully.');
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getInfrastructureObjectsList(Request $request): JsonResponse
+    {
+        $query = InfrastructureObject::query();
+
+        $query->where('city_id', config('app.current_city_id'));
+
+        if ($request->filled('district_id')) {
+            $query->where('district_id', $request->district_id);
+        }
+
+        $objects = $query->select('id', 'name', 'public_address')->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $objects,
+        ]);
     }
 
     /**
