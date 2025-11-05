@@ -11,7 +11,7 @@
             </p>
 
             @if (session('status'))
-                <div class="p-4 text-sm text-green-700 bg-green-100 rounded-lg border border-green-300 text-center" role="alert">
+                <div id="success-message" class="p-4 text-sm text-green-700 bg-green-100 rounded-lg border border-green-300 text-center" role="alert">
                     {{ session('status') }}
                 </div>
             @endif

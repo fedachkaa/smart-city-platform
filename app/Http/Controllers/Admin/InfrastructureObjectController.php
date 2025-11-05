@@ -9,6 +9,7 @@ use App\Models\District;
 use App\Models\InfrastructureObject;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -26,7 +27,8 @@ class InfrastructureObjectController extends Controller
         $query->searchByName($request->get('name'))
             ->ofStatus($request->get('status'))
             ->ofType($request->get('type'))
-            ->ofDistrict($request->get('district_id'));
+            ->ofDistrict($request->get('district_id'))
+            ->where('city_id', config('app.current_city_id'));
 
         $objects = $query->paginate(15)->withQueryString();
 
@@ -54,6 +56,7 @@ class InfrastructureObjectController extends Controller
             'latitude' => 'required|numeric|between:-90,90',
             'longitude' => 'required|numeric|between:-180,180',
             'description' => 'nullable|string',
+            'public_address' => 'required|string|max:255',
             'district_id' => ['nullable', 'integer', Rule::exists('districts', 'id')->where('city_id', config('app.current_city_id'))],
         ]);
 
@@ -88,6 +91,7 @@ class InfrastructureObjectController extends Controller
             'latitude' => 'required|numeric|between:-90,90',
             'longitude' => 'required|numeric|between:-180,180',
             'description' => 'nullable|string',
+            'public_address' => 'required|string|max:255',
             'district_id' => ['nullable', 'integer', Rule::exists('districts', 'id')->where('city_id', config('app.current_city_id'))],
         ]);
 
@@ -105,6 +109,28 @@ class InfrastructureObjectController extends Controller
         $object->delete();
 
         return back()->with('success', 'Infrastructure object deleted successfully.');
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getInfrastructureObjectsList(Request $request): JsonResponse
+    {
+        $query = InfrastructureObject::query();
+
+        $query->where('city_id', config('app.current_city_id'));
+
+        if ($request->filled('district_id')) {
+            $query->where('district_id', $request->district_id);
+        }
+
+        $objects = $query->select('id', 'name', 'public_address')->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $objects,
+        ]);
     }
 
     /**

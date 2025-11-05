@@ -1,11 +1,14 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\DashboardRequestController;
 use App\Http\Controllers\Admin\InfrastructureObjectController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\RegistrationController;
 use App\Http\Controllers\Map\MapController;
+use App\Http\Controllers\User\ProfileController;
+use App\Http\Controllers\User\RequestController;
 use App\Models\UserRole;
 use Illuminate\Support\Facades\Route;
 
@@ -32,7 +35,19 @@ Route::get('/api/map/objects', [MapController::class, 'index'])->name('api.map.o
 Route::middleware(['auth', 'role:' . implode(',' , UserRole::ALLOWED_ADMIN_ROLES)])->group(function () {
     Route::group(['prefix' => 'dashboard', 'as' => 'dashboard.'], function () {
         Route::get('/', [DashboardController::class, 'index'])->name('index');
-
         Route::resource('objects', InfrastructureObjectController::class)->names('objects');
+        Route::get('api/objects', [InfrastructureObjectController::class, 'getInfrastructureObjectsList'])->name('api.objects');
+        Route::resource('requests', DashboardRequestController::class)->only(['index', 'edit', 'update', 'destroy']);
     });
+});
+
+Route::middleware(['auth', 'role:' . UserRole::USER_ROLE_GUEST])->prefix('profile')->name('profile.')->group(function () {
+    Route::get('/', [ProfileController::class, 'index'])->name('index');
+    Route::post('profile', [ProfileController::class, 'update'])->name('update');
+
+    Route::get('requests/create', [RequestController::class, 'create'])->name('requests.create');
+    Route::post('requests', [RequestController::class, 'store'])->name('requests.store');
+    Route::get('api/requests', [RequestController::class, 'getRequests'])->name('profile.api.requests');
+
+    Route::get('api/objects', [RequestController::class, 'getInfrastructureObjectsList'])->name('api.objects');
 });

@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\City;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,12 +16,15 @@ class SetUserCity
      */
     public function handle(Request $request, Closure $next)
     {
+        $city = City::where('name', 'Kyiv')->first();
+
         if (Auth::check() && Auth::user()->city_id) {
-            config(['app.current_city_id' => Auth::user()->city_id]);
-            view()->share('currentCityId', Auth::user()->city_id);
-        } else {
-            config(['app.current_city_id' => null]);
+            $city = Auth::user()->city;
         }
+
+        config(['app.current_city_id' => $city->id]);
+        view()->share('currentCityId', $city->id);
+        view()->share('currentCity', $city);
 
         return $next($request);
     }

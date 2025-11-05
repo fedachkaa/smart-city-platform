@@ -4,7 +4,7 @@
     <div class="flex items-center justify-center min-h-screen p-4">
         <div class="w-full max-w-sm p-8 space-y-8 bg-white rounded-xl shadow-2xl transform transition duration-500 hover:shadow-cyan-400/50">
             @if (session('status'))
-                <div class="p-4 text-sm text-red-700 bg-red-100 rounded-lg" role="alert">
+                <div id="success-message" class="p-4 text-sm text-red-700 bg-red-100 rounded-lg" role="alert">
                     {{ session('status') }}
                 </div>
             @endif

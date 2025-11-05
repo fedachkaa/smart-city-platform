@@ -2,50 +2,38 @@
 
 namespace App\Models;
 
-use App\Enums\InfrastructureObjectStatus;
-use App\Enums\InfrastructureObjectType;
-use Database\Factories\InfrastructureObjectFactory;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Enums\UserRequestStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class InfrastructureObject extends Model
+class UserRequest extends Model
 {
-    /** @use HasFactory<InfrastructureObjectFactory> */
-    use HasFactory;
-
-    /**
-     * @var array
-     */
+    /** @var array */
     protected $fillable = [
-        'name',
-        'type',
-        'status',
-        'latitude',
-        'longitude',
-        'description',
-        'public_address',
-        'created_by',
+        'user_id',
         'city_id',
         'district_id',
+        'infrastructure_object_id',
+        'title',
+        'description',
+        'system_notes',
+        'status',
+        'photo'
     ];
 
     /**
      * @var array
      */
     protected $casts = [
-        'type' => InfrastructureObjectType::class,
-        'status' => InfrastructureObjectStatus::class,
-        'latitude' => 'float',
-        'longitude' => 'float',
+        'status' => UserRequestStatus::class,
     ];
 
     /**
      * @return BelongsTo
      */
-    public function creator(): BelongsTo
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'created_by');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     /**
@@ -65,24 +53,20 @@ class InfrastructureObject extends Model
     }
 
     /**
-     * Scope a query to filter by name.
+     * @return BelongsTo
      */
-    public function scopeSearchByName($query, $name)
+    public function infrastructureObject(): BelongsTo
     {
-        if ($name) {
-            return $query->where('name', 'like', '%' . $name . '%');
-        }
-
-        return $query;
+        return $this->belongsTo(InfrastructureObject::class, 'infrastructure_object_id');
     }
 
     /**
-     * Scope a query to filter by type.
+     * Scope a query to filter by title.
      */
-    public function scopeOfType($query, $type)
+    public function scopeSearchByTitle($query, $title)
     {
-        if ($type) {
-            return $query->where('type', $type);
+        if ($title) {
+            return $query->where('title', 'like', '%' . $title . '%');
         }
 
         return $query;
