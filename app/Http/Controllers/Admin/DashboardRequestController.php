@@ -6,6 +6,7 @@ use App\Enums\UserRequestStatus;
 use App\Http\Controllers\Controller;
 use App\Models\District;
 use App\Models\UserRequest;
+use App\Services\UserRequestService;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -14,6 +15,16 @@ use Illuminate\Validation\Rule;
 
 class DashboardRequestController extends Controller
 {
+    protected UserRequestService $userRequestService;
+
+    /**
+     * @param UserRequestService $userRequestService
+     */
+    public function __construct(UserRequestService $userRequestService)
+    {
+        $this->userRequestService = $userRequestService;
+    }
+
     /**
      * @return Factory|View
      */
@@ -53,7 +64,7 @@ class DashboardRequestController extends Controller
             'system_notes' => 'nullable|string',
         ]);
 
-        $request->update($validated);
+        $this->userRequestService->update($request, $validated);
 
         return redirect()->route('dashboard.requests.index')->with('success', 'Request updated successfully.');
     }

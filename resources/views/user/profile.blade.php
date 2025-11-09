@@ -34,6 +34,8 @@
                     @include('user.partials.' . $key, ['districts' => $districts, 'user' => auth()->user()])
                 </div>
             @endforeach
+
+            <div id="request-view" class="tab-pane hidden"></div>
         </div>
     </div>
 @endsection

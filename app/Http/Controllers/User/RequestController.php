@@ -15,6 +15,17 @@ use Illuminate\Validation\Rule;
 class RequestController extends Controller
 {
     /**
+     * @param UserRequest $userRequest
+     * @return string
+     */
+    public function show(UserRequest $userRequest)
+    {
+        $userRequest->load(['city', 'district', 'infrastructureObject']);
+
+        return view('user.partials.show-request', compact('userRequest'))->render();
+    }
+
+    /**
      * @param Request $request
      * @return RedirectResponse
      */
