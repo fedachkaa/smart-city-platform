@@ -25,9 +25,18 @@ document.addEventListener('DOMContentLoaded', () => {
         div.innerHTML = `
             <div class="flex justify-between items-center">
                 <h3 class="text-lg font-semibold">${req.title}</h3>
-                <span class="px-2 py-1 rounded text-xs font-medium ${statusClass}">
-                    ${req.status.replace('_', ' ')}
-                </span>
+                <div class="flex items-center space-x-2">
+                    <span class="px-2 py-1 rounded text-xs font-medium ${statusClass}">
+                        ${req.status.replace('_', ' ')}
+                    </span>
+                    <button class="js-view-request text-gray-500 hover:text-cyan-600 transition" 
+                        title="View Request" data-requestid="${req.id}">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.432 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                    </button>
+                </div>
             </div>
             <p class="text-gray-600 mt-2">${req.description ?? ''}</p>
             <p class="text-sm text-gray-500 mt-2">
@@ -57,6 +66,31 @@ document.addEventListener('DOMContentLoaded', () => {
             .catch(err => console.error('Error loading requests:', err));
     };
 
+    function loadRequestView(userRequestId) {
+        fetch(`/profile/requests/${userRequestId}`)
+            .then(res => res.text())
+            .then(html => {
+                const viewPane = document.getElementById('request-view');
+                viewPane.innerHTML = html;
+                document.getElementById('my-requests').classList.add('hidden');
+                viewPane.classList.remove('hidden');
+
+                viewPane.querySelector('#back-to-list').addEventListener('click', () => {
+                    viewPane.classList.add('hidden');
+                    document.getElementById('my-requests').classList.remove('hidden');
+                });
+            });
+    }
+
+    function initViewRequest() {
+        document.addEventListener('click', (e) => {
+            const viewBtn = e.target.closest('.js-view-request');
+            if (!viewBtn) return;
+
+            loadRequestView(viewBtn.dataset.requestid);
+        });
+    }
+
     prevBtn.addEventListener('click', () => {
         if (currentPage > 1) loadRequests(currentPage - 1);
     });
@@ -66,4 +100,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     loadRequests();
+    initViewRequest();
+
+    const params = new URLSearchParams(window.location.search);
+    const requestId = params.get('userRequestId');
+    if (requestId) {
+        loadRequestView(requestId);
+        const newUrl = window.location.origin + window.location.pathname;
+        window.history.replaceState({}, '', newUrl);
+    }
 });

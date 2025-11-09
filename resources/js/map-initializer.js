@@ -2,19 +2,18 @@ document.addEventListener('DOMContentLoaded', function () {
     const mapElement = document.getElementById('map');
     if (!mapElement) return;
 
-    const ukraineCenterLat = 48.3794;
-    const ukraineCenterLon = 31.1656;
-    const initialZoom = 6;
-
-    const bounds = [
-        [44.0, 22.0],
-        [52.5, 41.5]
-    ];
+    const { city } = window.appConfig || {};
+    const lat = city?.latitude ?? 50.4501;
+    const lon = city?.longitude ?? 30.5234;
+    const initialZoom = 11;
 
     const map = L.map('map', {
-        maxBounds: bounds,
+        maxBounds: [
+            [44.0, 22.0],
+            [52.5, 41.5]
+        ],
         maxBoundsViscosity: 1.0
-    }).setView([ukraineCenterLat, ukraineCenterLon], initialZoom);
+    }).setView([lat, lon], initialZoom);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
@@ -22,27 +21,47 @@ document.addEventListener('DOMContentLoaded', function () {
         maxZoom: 18
     }).addTo(map);
 
+    let heatLayer = null;
+
     fetch('/api/map/objects')
         .then(response => response.json())
         .then(objects => {
-            const markers = [];
+            const heatData = [];
+
             objects.forEach(obj => {
+                if (obj.latitude && obj.longitude) {
+                    heatData.push([obj.latitude, obj.longitude, 0.6]); // third = intensity
+                }
+
                 const icon = getMarkerIcon(obj.type, obj.status);
                 const popupContent = `
-                    <div style="font-size: 14px;">
-                        <h4 style="font-weight: bold; margin-bottom: 5px; color: ${icon.options.html.includes('red') ? '#dc2626' : '#1e40af'};">${obj.name} (${obj.type})</h4>
-                        <p>Status: <strong>${obj.status}</strong></p>
-                        <p>Description: ${obj.description ? obj.description.substring(0, 50) + '...' : 'N/A'}</p>
-                        <p class="text-xs mt-2">Lat: ${obj.latitude}, Lon: ${obj.longitude}</p>
-                    </div>
-                `;
+                <div style="font-size: 14px;">
+                    <h4 style="font-weight: bold; margin-bottom: 5px;">${obj.name} (${obj.type})</h4>
+                    <p>Status: <strong>${obj.status}</strong></p>
+                    <p>${obj.description ? obj.description.substring(0, 50) + '...' : 'N/A'}</p>
+                </div>
+            `;
 
-                L.marker([obj.latitude, obj.longitude], { icon: icon })
-                    .bindPopup(popupContent)
-                    .addTo(map);
+                L.marker([obj.latitude, obj.longitude], { icon }).bindPopup(popupContent).addTo(map);
             });
-        })
-        .catch(error => console.error('Error fetching map data:', error));
+
+            heatLayer = L.heatLayer(heatData, {
+                radius: 20,
+                blur: 15,
+                maxZoom: 12,
+            });
+        });
+
+    const toggle = document.getElementById('heatmap-toggle');
+
+    toggle.addEventListener('change', function () {
+        if (!heatLayer) return;
+        if (toggle.checked) {
+            map.addLayer(heatLayer);
+        } else {
+            map.removeLayer(heatLayer);
+        }
+    });
 
     const getMarkerIcon = (type, status) => {
         let color = '#3388ff';

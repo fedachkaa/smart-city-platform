@@ -4,14 +4,24 @@ namespace App\Http\Controllers\Map;
 
 use App\Http\Controllers\Controller;
 use App\Models\InfrastructureObject;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 
 class MapController extends Controller
 {
     /**
+     * @return View
+     */
+    public function index(): View
+    {
+        $city = config('app.current_city');
+        return view('welcome', compact('city'));
+    }
+
+    /**
      * @return JsonResponse
      */
-    public function index(): JsonResponse
+    public function getMapData(): JsonResponse
     {
         $objects = InfrastructureObject::select([
             'id',

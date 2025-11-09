@@ -55,6 +55,21 @@ services:
             - '${FORWARD_MAILPIT_SMTP_PORT:-1025}:1025'
         networks:
             - sail
+    n8n:
+        image: n8nio/n8n
+        container_name: n8n
+        ports:
+            - "5678:5678"
+        user: "${UID}:${GID}"
+        environment:
+            - N8N_BASIC_AUTH_ACTIVE=false
+            - N8N_HOST=n8n.local
+            - N8N_PORT=5678
+            - GENERIC_TIMEZONE=Europe/Kiev
+        volumes:
+            - ./n8n:/home/node/.n8n
+        networks:
+            - sail
 networks:
     sail:
         driver: bridge

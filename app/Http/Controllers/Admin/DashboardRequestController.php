@@ -6,14 +6,24 @@ use App\Enums\UserRequestStatus;
 use App\Http\Controllers\Controller;
 use App\Models\District;
 use App\Models\UserRequest;
+use App\Services\UserRequestService;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 
 class DashboardRequestController extends Controller
 {
+    protected UserRequestService $userRequestService;
+
+    /**
+     * @param UserRequestService $userRequestService
+     */
+    public function __construct(UserRequestService $userRequestService)
+    {
+        $this->userRequestService = $userRequestService;
+    }
+
     /**
      * @return Factory|View
      */
@@ -47,13 +57,7 @@ class DashboardRequestController extends Controller
      */
     public function update(Request $httpRequest, UserRequest $request): RedirectResponse
     {
-        $validated = $httpRequest->validate([
-            'status' => 'required|string|in:' . implode(',', array_column(UserRequestStatus::cases(), 'value')),
-            'infrastructure_object_id' => ['nullable', Rule::exists('infrastructure_objects', 'id')],
-            'system_notes' => 'nullable|string',
-        ]);
-
-        $request->update($validated);
+        $this->userRequestService->update($httpRequest, $request);
 
         return redirect()->route('dashboard.requests.index')->with('success', 'Request updated successfully.');
     }

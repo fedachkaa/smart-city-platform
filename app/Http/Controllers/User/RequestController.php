@@ -2,41 +2,44 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Enums\UserRequestStatus;
 use App\Http\Controllers\Controller;
 use App\Models\InfrastructureObject;
 use App\Models\UserRequest;
+use App\Services\UserRequestService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\Rule;
 
 class RequestController extends Controller
 {
+    protected UserRequestService $userRequestService;
+
+    /**
+     * @param UserRequestService $userRequestService
+     */
+    public function __construct(UserRequestService $userRequestService)
+    {
+        $this->userRequestService = $userRequestService;
+    }
+
+    /**
+     * @param UserRequest $userRequest
+     * @return string
+     */
+    public function show(UserRequest $userRequest)
+    {
+        $userRequest->load(['city', 'district', 'infrastructureObject']);
+
+        return view('user.partials.show-request', compact('userRequest'))->render();
+    }
+
     /**
      * @param Request $request
      * @return RedirectResponse
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'city_id' => ['required', Rule::exists('cities', 'id')],
-            'district_id' => ['required', Rule::exists('districts', 'id')],
-            'infrastructure_object_id' => ['nullable', Rule::exists('infrastructure_objects', 'id')],
-            'photo' => 'nullable|image|max:2048',
-        ]);
-
-        if ($request->hasFile('photo')) {
-            $validated['photo_path'] = $request->file('photo')->store('requests', 'public');
-        }
-
-        $validated['user_id'] = Auth::id();
-        $validated['status'] = UserRequestStatus::New;
-
-        UserRequest::create($validated);
+        $this->userRequestService->create($request);
 
         return redirect()->route('profile.index')->with('success', 'Your request has been submitted successfully!');
     }
