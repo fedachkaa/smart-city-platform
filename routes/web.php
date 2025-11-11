@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DashboardRequestController;
+use App\Http\Controllers\Admin\DashboardRoutesController;
 use App\Http\Controllers\Admin\InfrastructureObjectController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\PasswordResetController;
@@ -35,6 +36,8 @@ Route::middleware(['auth', 'role:' . implode(',' , UserRole::ALLOWED_ADMIN_ROLES
         Route::resource('objects', InfrastructureObjectController::class)->names('objects');
         Route::get('api/objects', [InfrastructureObjectController::class, 'getInfrastructureObjectsList'])->name('api.objects');
         Route::resource('requests', DashboardRequestController::class)->only(['index', 'edit', 'update', 'destroy'])->names('requests');
+        Route::resource('routes', DashboardRoutesController::class)->names('routes');
+        Route::post('routes/preview', [DashboardRoutesController::class, 'previewRoute'])->name('routes.preview');
     });
 });
 

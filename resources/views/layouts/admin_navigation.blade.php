@@ -20,6 +20,10 @@
                     <a href="{{ route('dashboard.requests.index') }}" class="inline-flex items-center px-1 pt-1 border-b-2 font-medium leading-5 transition duration-150 ease-in-out {{ request()->routeIs('dashboard.requests.*') ? 'text-gray-900 border-cyan-500' : 'text-gray-500 border-transparent hover:text-gray-700 hover:border-gray-300' }}">
                         User Requests
                     </a>
+
+                    <a href="{{ route('dashboard.routes.index') }}" class="inline-flex items-center px-1 pt-1 border-b-2 font-medium leading-5 transition duration-150 ease-in-out {{ request()->routeIs('dashboard.routes.*') ? 'text-gray-900 border-cyan-500' : 'text-gray-500 border-transparent hover:text-gray-700 hover:border-gray-300' }}">
+                        Service Routes
+                    </a>
                 </div>
             </div>
 
