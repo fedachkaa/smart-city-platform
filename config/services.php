@@ -38,4 +38,8 @@ return [
     'geonames' => [
         'username' => env('GEONAMES_USERNAME'),
     ],
+
+    'google_maps' => [
+        'key' => env('GOOGLE_MAPS_API_KEY'),
+    ],
 ];

@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             CitySeeder::class,
             DistrictSeeder::class,
             InfrastructureObjectSeeder::class,
+            CityBoundsSeeder::class,
         ]);
     }
 }

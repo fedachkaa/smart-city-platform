@@ -8,6 +8,7 @@ use Database\Factories\InfrastructureObjectFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class InfrastructureObject extends Model
 {
@@ -62,6 +63,16 @@ class InfrastructureObject extends Model
     public function district(): BelongsTo
     {
         return $this->belongsTo(District::class, 'district_id');
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function routes()
+    {
+        return $this->belongsToMany(Route::class, 'route_infrastructure_objects')
+            ->withPivot('order')
+            ->orderBy('pivot_order');
     }
 
     /**

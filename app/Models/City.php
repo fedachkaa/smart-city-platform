@@ -14,9 +14,15 @@ class City extends Model
         'region',
         'latitude',
         'longitude',
+        'bounds',
         'population',
         'country_code',
         'created_at',
         'updated_at',
+    ];
+
+    /** @var array */
+    protected $casts = [
+        'bounds' => 'array',
     ];
 }
