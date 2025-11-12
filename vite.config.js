@@ -24,6 +24,8 @@ export default defineConfig({
                 'resources/js/profile/new-request.js',
                 'resources/js/profile/requests-list.js',
                 'resources/js/admin/user-requests/edit.js',
+                'resources/js/admin/routes/create.js',
+                'resources/js/admin/routes/edit.js',
             ],
             refresh: true,
         }),

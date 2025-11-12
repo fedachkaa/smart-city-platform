@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->json('route');
             $table->foreignId('created_by')->constrained('users')->onDelete('cascade');
-            $table->timestamp('start_time')->nullable();
+            $table->time('start_time')->nullable();
             $table->timestamps();
         });
 

@@ -38,7 +38,7 @@
             <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
             <select name="status" id="status" required class="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm p-2 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 sm:text-sm">
                 @foreach ($allStatuses as $status)
-                    <option value="{{ $status }}" @if(old('status', $object->status ?? '') === $status) selected @endif>
+                    <option value="{{ $status }}" @if(old('status', $object->status->value ?? '') === $status) selected @endif>
                         {{ $status }}
                     </option>
                 @endforeach
@@ -89,9 +89,8 @@
 <div class="mt-6 bg-white p-6 rounded-lg shadow-md">
     <h3 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">Description</h3>
     <label for="description" class="block text-sm font-medium text-gray-700">Detailed Description</label>
-    <textarea name="description" id="description" rows="4" class="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm p-2 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 sm:text-sm">
-        {{ old('description', $object->description ?? '') }}
-    </textarea>
+    <textarea name="description" id="description" rows="4" class="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm p-2 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 sm:text-sm"
+    >{{ old('description', $object->description ?? '') }}</textarea>
     @error('description')<p class="text-xs text-red-500 mt-1">{{ $message }}</p>@enderror
 </div>
 

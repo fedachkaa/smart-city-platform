@@ -9,6 +9,7 @@ use App\Models\Route;
 use App\Services\RouteOptimizerService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class DashboardRoutesController extends Controller
@@ -59,10 +60,13 @@ class DashboardRoutesController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'start_point' => 'required|string',
+            'start_time' => 'required|string',
+            'start_point_address' => 'required|string',
             'object_ids' => 'required|array|min:1|max:5',
             'object_ids.*' => 'exists:infrastructure_objects,id',
             'route_polyline' => 'required|string',
             'route_legs' => 'required|array',
+            'optimized_order' => 'required|array',
         ]);
 
         [$lat, $lng] = array_map('trim', explode(',', $validated['start_point']));
@@ -71,11 +75,16 @@ class DashboardRoutesController extends Controller
             'city_id' => config('app.current_city_id'),
             'name' => $validated['name'],
             'created_by' => auth()->id(),
-            'start_time' => now(),
+            'start_time' => $validated['start_time'],
             'route' => [
                 'polyline' => $validated['route_polyline'],
                 'legs' => $validated['route_legs'],
-                'start_point' => ['lat' => (float)$lat, 'lng' => (float)$lng],
+                'optimized_order' => $validated['optimized_order'],
+                'start_point' => [
+                    'lat' => (float) $lat,
+                    'lng' => (float) $lng,
+                    'address' => $validated['start_point_address'],
+                ],
             ],
         ]);
 
@@ -84,6 +93,26 @@ class DashboardRoutesController extends Controller
         InfrastructureObject::whereIn('id', $validated['object_ids'])->update(['status' => InfrastructureObjectStatus::Maintenance]);
 
         return response()->json(['success' => true, 'route_id' => $route->id]);
+    }
+
+    /**
+     * @param Route $route
+     * @return View
+     */
+    public function edit(Route $route): View
+    {
+        return view('admin.routes.edit', compact('route'));
+    }
+
+    /**
+     * @param Route $route
+     * @return RedirectResponse
+     */
+    public function destroy(Route $route): RedirectResponse
+    {
+        $route->delete();
+
+        return redirect()->route('dashboard.routes.index')->with('success', 'Route deleted successfully.');
     }
 
     /**

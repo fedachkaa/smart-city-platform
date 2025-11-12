@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('head')
+    @vite('resources/js/admin/routes/create.js')
+@endsection
+
 @section('content')
     <header class="bg-white shadow">
         <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex justify-between">
@@ -10,6 +14,7 @@
                 Edit Service Route
             </h1>
         </div>
+        <meta name="csrf-token" content="{{ csrf_token() }}">
     </header>
 
     <main class="py-8">
@@ -46,6 +51,7 @@
                            placeholder="Enter start address or pick on map"
                            class="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm p-2 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition duration-150 sm:text-sm"
                            value="{{ old('start_address') }}">
+                    <input type="hidden" id="start_address_text" name="start_address_text">
                     @error('start_address')<p class="text-xs text-red-500 mt-1">{{ $message }}</p>@enderror
                 </div>
 
@@ -88,186 +94,9 @@
 
 @push('scripts')
     <script>
-        let map;
-        let routePolyline;
-        let markers = [];
         const cityBounds = @json($currentCityBounds);
-        let allowToSetMarkers = true;
-        let selectedObjects = [];
-        generatedRoute = null;
-
-        function initMap() {
-            const center = { lat: {{ $currentCityLat }}, lng: {{ $currentCityLng }} };
-
-            map = new google.maps.Map(document.getElementById('map'), {
-                center,
-                zoom: 12,
-                mapId: 'createRoteMap'
-            });
-
-            const bounds = new google.maps.LatLngBounds(
-                new google.maps.LatLng(cityBounds[0][0], cityBounds[0][1]),
-                new google.maps.LatLng(cityBounds[1][0], cityBounds[1][1])
-            );
-            map.setOptions({ restriction: { latLngBounds: bounds, strictBounds: false } });
-
-            map.addListener('click', (e) => {
-                if (allowToSetMarkers) {
-                    const latLng = e.latLng;
-                    document.getElementById('start_address').value = latLng.lat() + ',' + latLng.lng();
-                    clearMarkers();
-
-                    reverseGeocode(latLng, (address) => {
-                        addMarker(latLng, 'Start Point', address); // now info window matches other stops
-                    });
-                }
-            });
-        }
+        const mapCenter = { lat: {{ $currentCityLat }}, lng: {{ $currentCityLng }} };
     </script>
 
-    <script async
-            src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google_maps.key') }}&libraries=places,marker,geometry&callback=initMap">
-    </script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('generate-route').addEventListener('click', async (e) => {
-                e.preventDefault();
-                selectedObjects = Array.from(document.querySelectorAll('.js-object-checkbox:checked')).map(el => el.value);
-                if (selectedObjects.length === 0) {
-                    alert('Select at least 1 object!');
-                    return;
-                }
-                if (selectedObjects.length > 5) {
-                    alert('Select maximum 5 objects!');
-                    return;
-                }
-
-                const start = document.getElementById('start_address').value;
-                if (!start) {
-                    alert('Set a start point!');
-                    return;
-                }
-
-                const response = await fetch("{{ route('dashboard.routes.preview') }}", {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type':'application/json',
-                        'Accept': 'application/json',
-                        'X-CSRF-TOKEN':'{{ csrf_token() }}'
-                    },
-                    body: JSON.stringify({
-                        object_ids: selectedObjects,
-                        start_point: start
-                    })
-                });
-            const data = await response.json();
-                if (data.route) {
-                    generatedRoute = data.route;
-                    renderRoute(data.route);
-                }
-                else {
-                    alert('Failed to generate route');
-                }
-            });
-            document.getElementById('saveRouteBtn').addEventListener('click', async (e) => {
-                e.preventDefault();
-                if (!generatedRoute) return alert('No route to save');
-
-                const response = await fetch("{{ route('dashboard.routes.store') }}", {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type':'application/json',
-                        'X-CSRF-TOKEN':'{{ csrf_token() }}'
-                    },
-                    body: JSON.stringify({
-                        name: document.getElementById('name').value,
-                        start_point: document.getElementById('start_address').value,
-                        object_ids: selectedObjects,
-                        route_polyline: generatedRoute.polyline,
-                        route_legs: generatedRoute.legs
-                    })
-                });
-
-                const data = await response.json();
-                if (data.success) alert('Route saved successfully!');
-                else alert('Failed to save route');
-            });
-
-        });
-
-        function addMarker(latLng, title = '', address = '') {
-            const marker = new google.maps.marker.AdvancedMarkerElement({
-                position: latLng,
-                map,
-                title: title,
-            });
-
-            const infoWindow = new google.maps.InfoWindow({
-                content: `
-                    <div>
-                        <strong>${title}</strong><br>
-                        ${address}
-                    </div>
-                `
-            });
-
-            marker.addListener('click', () => {
-                infoWindow.open({
-                    anchor: marker,
-                    map,
-                });
-            });
-
-            markers.push(marker);
-        }
-
-        function clearMarkers() {
-            markers.forEach(m => m.setMap(null));
-            markers = [];
-        }
-
-        function renderRoute(route) {
-            clearMarkers();
-            allowToSetMarkers = false;
-
-            if (!route.polyline) {
-                console.error('No polyline found in route');
-                return;
-            }
-
-            const decodedPath = google.maps.geometry.encoding.decodePath(route.polyline);
-
-            if (routePolyline) routePolyline.setMap(null);
-            routePolyline = new google.maps.Polyline({
-                path: decodedPath,
-                strokeColor: '#06b6d4',
-                strokeOpacity: 0.8,
-                strokeWeight: 5,
-                map
-            });
-
-            route.legs.forEach((leg, index) => {
-                if (index === 0) {
-                    addMarker(leg.start_location, 'Start', leg.start_address || '');
-                }
-                addMarker(leg.end_location, `Stop ${index + 1}`, leg.end_address || '');
-            });
-
-            const bounds = new google.maps.LatLngBounds();
-            decodedPath.forEach(p => bounds.extend(p));
-            map.fitBounds(bounds);
-        }
-
-        function reverseGeocode(latLng, callback) {
-            const geocoder = new google.maps.Geocoder();
-            geocoder.geocode({ location: latLng }, (results, status) => {
-                if (status === "OK" && results[0]) {
-                    callback(results[0].formatted_address);
-                } else {
-                    callback(`${latLng.lat().toFixed(6)}, ${latLng.lng().toFixed(6)}`);
-                }
-            });
-        }
-    </script>
+    <script async src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google_maps.key') }}&libraries=places,marker,geometry&callback=initMap"></script>
 @endpush
