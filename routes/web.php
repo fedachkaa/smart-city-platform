@@ -7,18 +7,20 @@ use App\Http\Controllers\Admin\InfrastructureObjectController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\RegistrationController;
-use App\Http\Controllers\Map\MapController;
+use App\Http\Controllers\IndexController;
 use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\User\RequestController;
 use App\Models\UserRole;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', [MapController::class, 'index'])->name('homepage');
-Route::get('/api/map/objects', [MapController::class, 'getMapData'])->name('api.map.objects');
+Route::get('/', [IndexController::class, 'index'])->name('homepage');
+Route::get('/api/map/objects', [IndexController::class, 'getMapData'])->name('api.map.objects');
 
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login'])->name('login.post');
 Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
+
+Route::get('lang/{lang}', [IndexController::class, 'switchLanguage'])->name('lang.switch');
 
 Route::middleware('guest')->group(function () {
     Route::get('/forgot-password', [PasswordResetController::class, 'forgotPasswordForm'])->name('password.request');

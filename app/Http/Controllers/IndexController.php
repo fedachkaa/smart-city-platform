@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Map;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Models\InfrastructureObject;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 
-class MapController extends Controller
+class IndexController extends Controller
 {
     /**
      * @return View
@@ -34,5 +34,18 @@ class MapController extends Controller
         ])->where('city_id', config('app.current_city_id'))->get();
 
         return response()->json($objects);
+    }
+
+    /**
+     * @param $lang
+     * @return RedirectResponse
+     */
+    public function switchLanguage($lang): RedirectResponse
+    {
+        if (in_array($lang, ['en', 'uk'])) {
+            session(['locale' => $lang]);
+        }
+
+        return redirect()->back();
     }
 }
