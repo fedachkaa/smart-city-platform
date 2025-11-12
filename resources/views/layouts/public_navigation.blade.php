@@ -30,11 +30,11 @@
                 @auth
                     @if (in_array(Auth::user()?->role?->name, \App\Models\UserRole::ALLOWED_ADMIN_ROLES))
                         <a href="{{ route('dashboard.index') }}" class="text-sm font-medium text-gray-700 hover:text-cyan-600">
-                            Dashboard
+                            {{ __('messages.home.dashboard') }}
                         </a>
                     @else
                         <a href="{{ route('profile.index') }}" class="text-sm font-medium text-gray-700 hover:text-cyan-600">
-                            Profile
+                            {{ __('messages.home.profile') }}
                         </a>
                     @endif
 

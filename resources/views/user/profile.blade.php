@@ -12,12 +12,11 @@
     @endif
     <div class="min-h-screen flex bg-gray-100 p-6">
         <div class="w-64 bg-white shadow-lg rounded-xl p-4 flex-shrink-0 space-y-4">
-            <h2 class="text-xl font-bold text-gray-900 mb-4">Dashboard</h2>
             @php
                 $tabs = [
-                    'my-requests' => 'My Requests',
-                    'new-request' => 'New Request',
-                    'edit-profile' => 'Edit Profile',
+                    'my-requests' => __('messages.profile.menu.my_requests'),
+                    'new-request' => __('messages.profile.menu.new_request'),
+                    'edit-profile' => __('messages.profile.menu.my_profile'),
                 ];
             @endphp
 
