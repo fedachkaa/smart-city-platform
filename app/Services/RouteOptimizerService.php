@@ -32,7 +32,7 @@ class RouteOptimizerService
         ]);
 
         if ($response->failed()) {
-            throw new \Exception('Не вдалося побудувати маршрут через Google Maps API');
+            throw new \Exception('Can not build route via Google Maps API. Status: ' . $response->status() . ', response body: ' . $response->body());
         }
 
         $data = $response->json();

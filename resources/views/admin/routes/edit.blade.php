@@ -65,8 +65,10 @@
 @endsection
 
 @php
-    $currentCityLat = 48.6231;
-    $currentCityLng = 22.2966;
+    $currentCity = config('app.current_city');
+
+    $currentCityLat = $currentCity->latitude;
+    $currentCityLng = $currentCity->longitude;
 @endphp
 
 @push('scripts')

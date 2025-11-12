@@ -83,12 +83,14 @@
 @endsection
 
 @php
-    $currentCityLat = 48.6231;
-    $currentCityLng = 22.2966;
+    $city = config('app.current_city');
+
+    $currentCityLat = $city->latitude;
+    $currentCityLng = $city->longitude;
 
     $currentCityBounds = [
-        [48.5931, 22.2666],
-        [48.6531, 22.3266],
+        [$city->bounds['south'], $city->bounds['west']],
+        [$city->bounds['north'], $city->bounds['east']],
     ];
 @endphp
 
