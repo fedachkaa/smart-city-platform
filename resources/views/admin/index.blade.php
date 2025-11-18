@@ -83,7 +83,6 @@
                             <li class="py-3 flex justify-between items-center hover:bg-gray-50 transition duration-100 px-2 rounded-md">
                                 <div>
                                     <p class="text-sm font-medium text-gray-900">{{ $object->name }} ({{ $object->type->value ?? $object->type }})</p>
-                                    <p class="text-xs text-gray-500">District: {{ $object->district?->name ?? '' }}</p>
                                 </div>
                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
                                 @if($object->status->value == 'Active') bg-green-100 text-green-800

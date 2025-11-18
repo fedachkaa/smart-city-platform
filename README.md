@@ -23,7 +23,7 @@ To create a basic, functional platform for managing elements of urban infrastruc
 ### 3. Admin Panel
 
 * View list of infrastructure objects
-* Apply **filters** (by status, type, district)
+* Apply **filters** (by status, type)
 * Add/Edit/Delete objects
 
 ### 4. Basic Analytics

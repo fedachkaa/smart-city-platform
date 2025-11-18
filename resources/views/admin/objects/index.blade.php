@@ -24,7 +24,6 @@
             @include('admin.objects.search_form', [
                 'allStatuses' => $allStatuses,
                 'allTypes' => $allTypes,
-                'allDistricts' => $allDistricts,
             ])
 
             <div class="bg-white overflow-hidden shadow-lg rounded-lg">
@@ -56,7 +55,7 @@
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    {{ $object->district?->name ? ($object->district?->name . ' | ') : ''  }} Lat: {{ number_format($object->latitude, 5) }} | Lon: {{ number_format($object->longitude, 5) }}
+                                    Lat: {{ number_format($object->latitude, 5) }} | Lon: {{ number_format($object->longitude, 5) }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                     {{ $object->creator?->full_name ?? 'N/A' }}

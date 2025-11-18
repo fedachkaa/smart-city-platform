@@ -28,20 +28,6 @@
             </div>
 
             <div class="relative group">
-                <label for="district_id" class="block text-sm font-medium text-gray-700">District</label>
-                <select id="district_id" name="district_id"
-                        class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-cyan-500 focus:border-cyan-500">
-                    <option value="">Select District</option>
-                    @foreach($districts as $district)
-                        <option value="{{ $district->id }}">{{ $district->name }}</option>
-                    @endforeach
-                </select>
-                @error('district_id')
-                <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <div class="relative group">
                 <label for="infrastructure_object_id" class="block text-sm font-medium text-gray-700">{{ __('messages.profile.new_request.infrastructure_object') }}</label>
                 <select id="infrastructure_object_id" name="infrastructure_object_id"
                         class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-cyan-500 focus:border-cyan-500">

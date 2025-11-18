@@ -38,7 +38,7 @@
                         @foreach($objects as $object)
                             <label class="flex items-center space-x-2 p-2 border rounded hover:bg-gray-50 cursor-pointer">
                                 <input type="checkbox" name="objects[]" value="{{ $object->id }}" class="js-object-checkbox">
-                                <span>{{ $object->name }} ({{ $object->city->name ?? '' }}, {{ $object->district->name ?? '' }})</span>
+                                <span>{{ $object->name }} ({{ $object->city->name ?? '' }})</span>
                             </label>
                         @endforeach
                     </div>

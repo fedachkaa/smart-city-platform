@@ -150,6 +150,5 @@ return [
         'longitude' => 'longitude',
         'description' => 'description',
         'public_address' => 'public address',
-        'district_id' => 'district',
     ],
 ];

@@ -30,7 +30,7 @@
         <div id="dashboard-content" class="flex-1 bg-white shadow-lg rounded-xl p-6 ml-6 overflow-auto">
             @foreach($tabs as $key => $label)
                 <div id="{{ $key }}" class="tab-pane hidden">
-                    @include('user.partials.' . $key, ['districts' => $districts, 'user' => auth()->user()])
+                    @include('user.partials.' . $key, ['user' => auth()->user()])
                 </div>
             @endforeach
 

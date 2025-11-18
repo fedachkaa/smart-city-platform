@@ -32,26 +32,11 @@
                                        value="{{ old('title', $request->title ?? '') }}" readonly>
                             </div>
 
-                            <div class="space-y-1">
-                                <label for="district_id" class="block text-sm font-medium text-gray-700">District</label>
-                                <select name="district_id" id="district_id" class="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm p-2 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 sm:text-sm">
-                                    <option value="">All Districts</option>
-                                    @foreach ($allDistricts as $district)
-                                        <option value="{{ $district['id'] }}" @if(old('district_id', $request->district_id ?? '') === $district['id']) selected @endif>
-                                            {{ $district['name'] }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('district_id')<p class="text-xs text-red-500 mt-1">{{ $message }}</p>@enderror
-                            </div>
-
                             <div class="space-y-1 md:col-span-2">
                                 <label for="infrastructure_object_id" class="block text-sm font-medium text-gray-700">Infrastructure Object</label>
                                 <select name="infrastructure_object_id" id="infrastructure_object_id" class="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm p-2 bg-gray-100 sm:text-sm disabled:cursor-not-allowed">
                                     @if ($request->infrastructure_object_id)
                                         <option value="{{ $request->infrastructure_object_id }}" selected>{{ $request->infrastructureObject->name }}</option>
-                                    @else
-                                        <option value="">Select a district first</option>
                                     @endif
                                 </select>
                                 @error('infrastructure_object_id')<p class="text-xs text-red-500 mt-1">{{ $message }}</p>@enderror

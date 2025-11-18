@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
-use App\Models\District;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -17,8 +16,7 @@ class ProfileController extends Controller
      */
     public function index(): View
     {
-        $districts = District::select()->where('city_id', config('app.current_city_id'))->get();
-        return view('user.profile', compact('districts'));
+        return view('user.profile');
     }
 
     /**
