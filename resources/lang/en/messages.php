@@ -22,7 +22,8 @@ return [
         'password' => __('fields.password'),
         'password_confirmation' => __('fields.password_confirmation'),
         'register' => 'Register',
-        'already_have_account' => 'Already have an account? Login'
+        'already_have_account' => 'Already have an account? Login',
+        'registered_successfully' => 'You have been successfully registered!',
     ],
     'login' => [
         'title' => 'Welcome Back!',
@@ -31,6 +32,7 @@ return [
         'password' => __('fields.password'),
         'login' => 'Login',
         'forgot_password' => 'Trouble logging in?',
+        'not_authorized_dashboard' => 'You are not authorized to access the dashboard.',
     ],
     'forget_password' => [
         'title' => 'Forgot Your Password?',
@@ -54,6 +56,7 @@ return [
         ],
         'my_profile' => [
             'new_password_placeholder' => 'Leave blank to keep current',
+            'updated_successfully' => 'Profile updated successfully',
         ],
         'new_request' => [
             'title' => 'Create New Request',
@@ -61,7 +64,20 @@ return [
             'description' => __('fields.description'),
             'infrastructure_object' => 'Infrastructure object',
             'photo' => 'Photo',
-            'submit' => 'Submit request'
+            'submit' => 'Submit request',
+            'saved_successfully' => 'Your request has been submitted successfully!'
+        ],
+    ],
+    'dashboard' => [
+        'route_build_failed' => 'Failed to build route: :error',
+        'requests' => [
+            'updated_successfully' => 'Request updated successfully.',
+            'deleted_successfully' => 'Request deleted successfully.',
+        ],
+        'objects' => [
+            'created_successfully' => 'Infrastructure object created successfully.',
+            'updated_successfully' => 'Infrastructure object updated successfully.',
+            'deleted_successfully' => 'Infrastructure object deleted successfully.',
         ],
     ],
 ];

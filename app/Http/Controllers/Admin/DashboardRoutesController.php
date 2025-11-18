@@ -144,7 +144,7 @@ class DashboardRoutesController extends Controller
         } catch (\Throwable $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Не вдалося побудувати маршрут: ' . $e->getMessage(),
+                'message' => __('messages.dashboard.route_build_failed', ['error' => $e->getMessage()]),
             ], 500);
         }
     }

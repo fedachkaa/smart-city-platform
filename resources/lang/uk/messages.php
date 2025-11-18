@@ -22,7 +22,8 @@ return [
         'password' => __('fields.password'),
         'password_confirmation' => __('fields.password_confirmation'),
         'register' => 'Зареєструватися',
-        'already_have_account' => 'Вже маєте акаунт? Увійти'
+        'already_have_account' => 'Вже маєте акаунт? Увійти',
+        'registered_successfully' => 'Ви успішно зареєструвалися!',
     ],
     'login' => [
         'title' => 'Ласкаво просимо назад!',
@@ -54,6 +55,7 @@ return [
         ],
         'my_profile' => [
             'new_password_placeholder' => 'Залиште порожнім, щоб зберегти поточний',
+            'updated_successfully' => 'Профіль успішно оновлено',
         ],
         'new_request' => [
             'title' => 'Новий запит',
@@ -61,7 +63,21 @@ return [
             'description' => __('fields.description'),
             'infrastructure_object' => "Об'єкт інфраструктури",
             'photo' => 'Фото',
-            'submit' => 'Надіслати запит'
+            'submit' => 'Надіслати запит',
+            'saved_successfully' => 'Ваш запит було успішно надіслано!',
+            'not_authorized_dashboard' => 'Ви не маєте прав доступу до панелі керування.',
+        ],
+    ],
+    'dashboard' => [
+        'route_build_failed' => 'Не вдалося побудувати маршрут: :error',
+        'requests' => [
+            'updated_successfully' => 'Запит успішно оновлено.',
+            'deleted_successfully' => 'Запит успішно видалено.',
+        ],
+        'objects' => [
+            'created_successfully' => 'Об’єкт інфраструктури успішно створено.',
+            'updated_successfully' => 'Об’єкт інфраструктури успішно оновлено.',
+            'deleted_successfully' => 'Об’єкт інфраструктури успішно видалено.',
         ],
     ],
 ];
