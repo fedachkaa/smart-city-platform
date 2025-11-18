@@ -41,7 +41,7 @@ class RequestController extends Controller
     {
         $this->userRequestService->create($request);
 
-        return redirect()->route('profile.index')->with('success', 'Your request has been submitted successfully!');
+        return redirect()->route('profile.index')->with('success',  __('messages.profile.new_request.saved_successfully'));
     }
 
     /**

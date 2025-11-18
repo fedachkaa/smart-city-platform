@@ -22,21 +22,21 @@
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center bg-white shadow-sm mb-6 rounded-lg mt-4">
         <h1 class="text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl md:text-6xl">
-            Smart City Platform Overview
+            Smart City Platform
         </h1>
         <p class="mt-4 max-w-2xl mx-auto text-xl text-gray-500 sm:mt-5 pt-4">
-            Visualize and monitor key urban infrastructure components in real-time. Our platform provides a centralized, map-based interface for Guests, Operators, and Administrators.
+            {{ __('messages.home.about') }}
         </p>
     </div>
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div class="flex items-center justify-between mb-4 border-b pb-2">
             <h2 class="text-2xl font-bold text-gray-800" id="map-view-section">
-                Interactive Infrastructure Map
+                {{ __('messages.home.map_title') }}
             </h2>
 
             <label class="flex items-center cursor-pointer">
-                <span class="text-sm font-medium text-gray-700 mr-3">Heatmap</span>
+                <span class="text-sm font-medium text-gray-700 mr-3"> {{ __('messages.home.heatmap') }}</span>
                 <div class="relative">
                     <input id="heatmap-toggle" type="checkbox" class="sr-only peer">
                     <div class="w-11 h-6 bg-gray-300 rounded-full peer-checked:bg-cyan-600 transition-colors duration-200"></div>

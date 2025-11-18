@@ -59,7 +59,7 @@ class DashboardRequestController extends Controller
     {
         $this->userRequestService->update($httpRequest, $request);
 
-        return redirect()->route('dashboard.requests.index')->with('success', 'Request updated successfully.');
+        return redirect()->route('dashboard.requests.index')->with('success', __('messages.dashboard.requests.updated_successfully'));
     }
 
     /**
@@ -70,7 +70,7 @@ class DashboardRequestController extends Controller
     {
         $request->delete();
 
-        return redirect()->route('dashboard.requests.index')->with('success', 'Request deleted successfully.');
+        return redirect()->route('dashboard.requests.index')->with('success', __('messages.dashboard.requests.deleted_successfully'));
     }
 
     /**

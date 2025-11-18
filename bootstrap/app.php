@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\CheckUserRole;
+use App\Http\Middleware\SetLocale;
 use App\Http\Middleware\SetUserCity;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -18,7 +19,10 @@ return Application::configure(basePath: dirname(__DIR__))
             'setUserCity' => SetUserCity::class,
         ]);
 
-        $middleware->appendToGroup('web', SetUserCity::class);
+        $middleware->appendToGroup('web', [
+            SetUserCity::class,
+            SetLocale::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

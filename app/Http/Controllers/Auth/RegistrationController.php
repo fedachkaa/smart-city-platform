@@ -46,7 +46,7 @@ class RegistrationController extends Controller
 
         Auth::login($user);
 
-        return redirect()->route('homepage')->with('success', 'You have been successfully registered!.');
+        return redirect()->route('homepage')->with('success', __('messages.register.registered_successfully'));
     }
 
     /**

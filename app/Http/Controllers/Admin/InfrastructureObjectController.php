@@ -65,7 +65,7 @@ class InfrastructureObjectController extends Controller
 
         InfrastructureObject::create($validatedData);
 
-        return redirect()->route('dashboard.objects.index')->with('success', 'Infrastructure object created successfully.');
+        return redirect()->route('dashboard.objects.index')->with('success', __('messages.dashboard.objects.created_successfully'));
     }
 
     /**
@@ -97,7 +97,7 @@ class InfrastructureObjectController extends Controller
 
         $object->update($validatedData);
 
-        return redirect()->route('dashboard.objects.index')->with('success', 'Infrastructure object updated successfully.');
+        return redirect()->route('dashboard.objects.index')->with('success', __('messages.dashboard.objects.updated_successfully'));
     }
 
     /**
@@ -108,7 +108,7 @@ class InfrastructureObjectController extends Controller
     {
         $object->delete();
 
-        return back()->with('success', 'Infrastructure object deleted successfully.');
+        return back()->with('success', __('messages.dashboard.objects.deleted_successfully'));
     }
 
     /**

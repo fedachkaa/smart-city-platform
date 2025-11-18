@@ -9,7 +9,7 @@
                 </div>
             @endif
             <h2 class="text-3xl font-extrabold text-gray-900 text-center tracking-tight">
-                Reset your password
+                {{ __('messages.reset_password.title') }}
             </h2>
             <form method="POST" action="{{ route('password.update') }}" class="space-y-6">
                 @csrf
@@ -18,7 +18,7 @@
 
                 <div class="relative group">
                     <label for="email" class="block text-sm font-medium text-gray-700 group-focus-within:text-cyan-600 transition duration-200">
-                        Email Address
+                        {{ __('messages.reset_password.email_address') }}
                     </label>
                     <div class="mt-1">
                         <input id="email" name="email" type="email" autocomplete="email" required
@@ -32,7 +32,9 @@
                 </div>
 
                 <div class="relative group">
-                    <label for="password" class="block text-sm font-medium text-gray-700 group-focus-within:text-cyan-600 transition duration-200">New Password</label>
+                    <label for="password" class="block text-sm font-medium text-gray-700 group-focus-within:text-cyan-600 transition duration-200">
+                        {{ __('messages.reset_password.new_password') }}
+                    </label>
                     <div class="mt-1">
                         <input id="password" name="password" type="password" autocomplete="new-password" required
                                class="appearance-none block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm @error('password') border-red-500 @enderror transition duration-150 ease-in-out"
@@ -44,7 +46,9 @@
                 </div>
 
                 <div class="relative group">
-                    <label for="password_confirmation" class="block text-sm font-medium text-gray-700 group-focus-within:text-cyan-600 transition duration-200">Confirm Password</label>
+                    <label for="password_confirmation" class="block text-sm font-medium text-gray-700 group-focus-within:text-cyan-600 transition duration-200">
+                        {{ __('messages.reset_password.password_confirmation') }}
+                    </label>
                     <div class="mt-1">
                         <input id="password_confirmation" name="password_confirmation" type="password" autocomplete="new-password" required
                                class="appearance-none block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm transition duration-150 ease-in-out"
@@ -55,7 +59,7 @@
                 <div class="pt-2">
                     <button type="submit"
                             class="cursor-pointer w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg shadow-lg text-sm font-semibold text-white bg-cyan-600 hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 transform transition duration-200 ease-in-out active:scale-95">
-                        Reset Password
+                        {{ __('messages.reset_password.reset') }}
                     </button>
                 </div>
             </form>

@@ -42,9 +42,7 @@ class LoginController extends Controller
             return redirect()->intended($this->getRedirectPath($user));
         }
 
-        return back()->withErrors([
-            'loginError' => 'The provided credentials do not match our records.',
-        ])->onlyInput('email');
+        return back()->withErrors(['loginError' => __('auth.failed')])->onlyInput('email');
     }
 
     /**

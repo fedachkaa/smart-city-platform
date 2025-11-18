@@ -26,6 +26,6 @@ class CheckUserRole
             return $next($request);
         }
 
-        return redirect('/')->with('error', 'You are not authorized to access the dashboard.');
+        return redirect('/')->with('error', __('messages.login.not_authorized_dashboard'));
     }
 }
