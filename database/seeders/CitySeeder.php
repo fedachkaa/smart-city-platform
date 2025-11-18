@@ -8,6 +8,8 @@ use App\Models\City;
 
 class CitySeeder extends Seeder
 {
+    const FEATURE_CODES = ['PPLA', 'PPLC'];
+
     /**
      * @return void
      */
@@ -15,56 +17,64 @@ class CitySeeder extends Seeder
     {
         $username = config('services.geonames.username');
         $country = 'UA';
-        $minPopulation = 10000;
 
-        $startRow = 0;
-        $maxRows = 1000;
-        do {
-            $response = Http::get('http://api.geonames.org/searchJSON', [
+        foreach (self::FEATURE_CODES as $featureCode) {
+            $responseEn = Http::get('http://api.geonames.org/searchJSON', [
                 'country' => $country,
                 'featureClass' => 'P',
-                'minPopulation' => $minPopulation,
+                'featureCode' => $featureCode,
                 'username' => $username,
-                'maxRows' => $maxRows,
-                'startRow' => $startRow,
+                'lang' => 'en',
             ]);
 
-            if ($response->failed()) {
-                $status = $response->status();
-                $body = $response->body();
-
-                $this->command->error("❌ Error occurred during GeoNames request (startRow {$startRow})");
-                $this->command->warn("Status code: {$status}");
-                $this->command->warn("Response body: " . mb_substr($body, 0, 500));
-                break;
+            if ($responseEn->failed()) {
+                $this->command->error("❌ Error occurred during GeoNames request");
+                $this->command->warn("Status code: {$responseEn->status()}");
+                $this->command->warn("Response body: " . mb_substr($responseEn->body(), 0, 500));
+                return;
             }
 
-            $data = $response->json();
-            $geonames = $data['geonames'] ?? [];
+            $this->command->info('GeoNames response total: ' . $responseEn->json()['totalResultsCount'] ?? 0);
 
-            if (empty($geonames)) {
-                break;
+            $responseUk = Http::get('http://api.geonames.org/searchJSON', [
+                'country' => $country,
+                'featureClass' => 'P',
+                'featureCode' => $featureCode,
+                'username' => $username,
+                'lang' => 'uk',
+            ]);
+
+            if ($responseUk->failed()) {
+                $this->command->error("❌ Error occurred during GeoNames request (UK)");
+                return;
             }
 
-            foreach ($geonames as $item) {
+            $geonamesEn = $responseEn->json()['geonames'] ?? [];
+            $geonamesUk = $responseUk->json()['geonames'] ?? [];
+
+            if (empty($geonamesEn)) {
+                return;
+            }
+
+            foreach ($geonamesEn as $index => $itemEn) {
+                $itemUk = $geonamesUk[$index] ?? [];
+
                 City::updateOrCreate(
-                    ['name' => $item['name']],
+                    ['name' => $itemEn['name']],
                     [
-                        'region' => $item['adminName1'] ?? null,
-                        'name' => $item['name'],
-                        'latitude' => $item['lat'] ?? null,
-                        'longitude' => $item['lng'] ?? null,
-                        'population' => $item['population'],
-                        'country_code' => $item['countryCode'],
-                    ],
+                        'name_native' => $itemUk['name'] ?? $itemEn['name'],
+                        'region' => $itemEn['adminName1'] ?? null,
+                        'latitude' => $itemEn['lat'] ?? null,
+                        'longitude' => $itemEn['lng'] ?? null,
+                        'population' => $itemEn['population'] ?? null,
+                        'country_code' => $itemEn['countryCode'],
+                    ]
                 );
             }
 
-            $this->command->info('Saved ' . count($geonames) . ' cities with startRow ' . $startRow);
-            $startRow += $maxRows;
-            sleep(1);
-        } while (true);
+            $this->command->info('Saved ' . count($geonamesEn) . ' administrative cities');
+        }
 
-        $this->command->info("Finished: Ukraine cities (> {$minPopulation}) with GeoNames");
+        $this->command->info("✅ Finished: Ukraine administrative centers");
     }
 }
