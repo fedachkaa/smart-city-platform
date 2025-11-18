@@ -28,7 +28,6 @@ class InfrastructureObject extends Model
         'public_address',
         'created_by',
         'city_id',
-        'district_id',
     ];
 
     /**
@@ -55,14 +54,6 @@ class InfrastructureObject extends Model
     public function city(): BelongsTo
     {
         return $this->belongsTo(City::class, 'city_id');
-    }
-
-    /**
-     * @return BelongsTo
-     */
-    public function district(): BelongsTo
-    {
-        return $this->belongsTo(District::class, 'district_id');
     }
 
     /**
@@ -106,18 +97,6 @@ class InfrastructureObject extends Model
     {
         if ($status) {
             return $query->where('status', $status);
-        }
-
-        return $query;
-    }
-
-    /**
-     * Scope a query to filter by district id.
-     */
-    public function scopeOfDistrict($query, $district)
-    {
-        if ($district) {
-            return $query->where('district_id', $district);
         }
 
         return $query;

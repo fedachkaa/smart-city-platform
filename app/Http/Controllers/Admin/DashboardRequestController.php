@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Enums\UserRequestStatus;
 use App\Http\Controllers\Controller;
-use App\Models\District;
 use App\Models\UserRequest;
 use App\Services\UserRequestService;
 use Illuminate\Contracts\View\Factory;
@@ -29,11 +28,10 @@ class DashboardRequestController extends Controller
      */
     public function index(Request $request)
     {
-        $query = UserRequest::with('user', 'city', 'district');
+        $query = UserRequest::with('user', 'city');
 
         $query->searchByTitle($request->get('title'))
             ->ofStatus($request->get('status'))
-            ->ofDistrict($request->get('district_id'))
             ->where('city_id', config('app.current_city_id'));
 
         $requests = $query->paginate(15)->withQueryString();
@@ -80,9 +78,6 @@ class DashboardRequestController extends Controller
     {
         return [
             'allStatuses' => array_column(UserRequestStatus::cases(), 'value'),
-            'allDistricts' =>  District::where('city_id', config('app.current_city_id'))
-                ->get(['id', 'name'])
-                ->toArray()
         ];
     }
 }

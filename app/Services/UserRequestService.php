@@ -34,7 +34,6 @@ class UserRequestService
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'city_id' => ['required', Rule::exists('cities', 'id')],
-            'district_id' => ['required', Rule::exists('districts', 'id')],
             'infrastructure_object_id' => ['nullable', Rule::exists('infrastructure_objects', 'id')],
             'photo' => 'nullable|image|max:2048',
         ]);

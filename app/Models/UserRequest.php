@@ -12,7 +12,6 @@ class UserRequest extends Model
     protected $fillable = [
         'user_id',
         'city_id',
-        'district_id',
         'infrastructure_object_id',
         'title',
         'description',
@@ -47,14 +46,6 @@ class UserRequest extends Model
     /**
      * @return BelongsTo
      */
-    public function district(): BelongsTo
-    {
-        return $this->belongsTo(District::class, 'district_id');
-    }
-
-    /**
-     * @return BelongsTo
-     */
     public function infrastructureObject(): BelongsTo
     {
         return $this->belongsTo(InfrastructureObject::class, 'infrastructure_object_id');
@@ -79,18 +70,6 @@ class UserRequest extends Model
     {
         if ($status) {
             return $query->where('status', $status);
-        }
-
-        return $query;
-    }
-
-    /**
-     * Scope a query to filter by district id.
-     */
-    public function scopeOfDistrict($query, $district)
-    {
-        if ($district) {
-            return $query->where('district_id', $district);
         }
 
         return $query;

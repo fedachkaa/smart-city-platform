@@ -1,24 +1,9 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const districtSelect = document.getElementById('district_id');
     const infraSelect = document.getElementById('infrastructure_object_id');
     const selectedInfraObjectId = infraSelect.value;
 
-    districtSelect.addEventListener('change', function () {
-        const districtId = this.value;
-
-        infraSelect.innerHTML = '<option>Loading...</option>';
-        infraSelect.disabled = true;
-
-        if (!districtId) {
-            infraSelect.innerHTML = '<option value="">Select a district first</option>';
-            return;
-        }
-
-        loadInfrastructureObjects(districtId, infraSelect)
-    });
-
-    function loadInfrastructureObjects(districtId, infraSelect) {
-        fetch(`/dashboard/api/objects?district_id=` + districtId)
+    function loadInfrastructureObjects(infraSelect) {
+        fetch(`/dashboard/api/objects`)
             .then(response => response.json())
             .then(json => {
                 if (!json.success || !Array.isArray(json.data)) {
@@ -43,5 +28,5 @@ document.addEventListener('DOMContentLoaded', function () {
             });
     }
 
-    loadInfrastructureObjects(districtSelect.value, infraSelect);
+    loadInfrastructureObjects(infraSelect);
 });

@@ -40,8 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
             <p class="text-gray-600 mt-2">${req.description ?? ''}</p>
             <p class="text-sm text-gray-500 mt-2">
-                ${req.city?.name ?? ''} • ${req.district?.name ?? ''} •
-                ${new Date(req.created_at).toLocaleDateString()}
+                ${req.city?.name ?? ''} • ${new Date(req.created_at).toLocaleDateString()}
             </p>
         `;
         container.appendChild(div);

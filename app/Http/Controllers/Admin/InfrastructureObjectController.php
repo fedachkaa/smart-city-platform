@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Enums\InfrastructureObjectStatus;
 use App\Enums\InfrastructureObjectType;
 use App\Http\Controllers\Controller;
-use App\Models\District;
 use App\Models\InfrastructureObject;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -27,7 +26,6 @@ class InfrastructureObjectController extends Controller
         $query->searchByName($request->get('name'))
             ->ofStatus($request->get('status'))
             ->ofType($request->get('type'))
-            ->ofDistrict($request->get('district_id'))
             ->where('city_id', config('app.current_city_id'));
 
         $objects = $query->paginate(15)->withQueryString();
@@ -57,7 +55,6 @@ class InfrastructureObjectController extends Controller
             'longitude' => 'required|numeric|between:-180,180',
             'description' => 'nullable|string',
             'public_address' => 'required|string|max:255',
-            'district_id' => ['nullable', 'integer', Rule::exists('districts', 'id')->where('city_id', config('app.current_city_id'))],
         ]);
 
         $validatedData['created_by'] = Auth::id();
@@ -92,7 +89,6 @@ class InfrastructureObjectController extends Controller
             'longitude' => 'required|numeric|between:-180,180',
             'description' => 'nullable|string',
             'public_address' => 'required|string|max:255',
-            'district_id' => ['nullable', 'integer', Rule::exists('districts', 'id')->where('city_id', config('app.current_city_id'))],
         ]);
 
         $object->update($validatedData);
@@ -121,10 +117,6 @@ class InfrastructureObjectController extends Controller
 
         $query->where('city_id', config('app.current_city_id'));
 
-        if ($request->filled('district_id')) {
-            $query->where('district_id', $request->district_id);
-        }
-
         $objects = $query->select('id', 'name', 'public_address')->get();
 
         return response()->json([
@@ -141,9 +133,6 @@ class InfrastructureObjectController extends Controller
         return [
             'allTypes' => array_column(InfrastructureObjectType::cases(), 'value'),
             'allStatuses' => array_column(InfrastructureObjectStatus::cases(), 'value'),
-            'allDistricts' => District::where('city_id', config('app.current_city_id'))
-                ->get(['id', 'name'])
-                ->toArray(),
         ];
     }
 }

@@ -34,6 +34,5 @@ return [
         'longitude' => 'довгота',
         'description' => 'опис',
         'public_address' => 'публічна адреса',
-        'district_id' => 'район',
     ],
 ];

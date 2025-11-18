@@ -10,19 +10,6 @@
         </div>
 
         <div class="space-y-1">
-            <label for="district_id" class="block text-sm font-medium text-gray-700">District</label>
-            <select name="district_id" id="district_id" class="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm p-2 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition duration-150 sm:text-sm">
-                <option value="">All Districts</option>
-                @foreach ($allDistricts as $district)
-                    <option value="{{ $district['id'] }}" @if(old('type', $object->district_id ?? '') === $district['id']) selected @endif>>
-                        {{ $district['name'] }}
-                    </option>
-                @endforeach
-            </select>
-            @error('district_id')<p class="text-xs text-red-500 mt-1">{{ $message }}</p>@enderror
-        </div>
-
-        <div class="space-y-1">
             <label for="type" class="block text-sm font-medium text-gray-700">Type</label>
             <select name="type" id="type" required class="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm p-2 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 sm:text-sm">
                 @foreach ($allTypes as $type)

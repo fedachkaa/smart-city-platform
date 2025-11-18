@@ -27,8 +27,8 @@ $statusColor = match($userRequest->status) {
         </div>
 
         <div class="mb-4">
-            <h3 class="text-lg font-semibold">City / District</h3>
-            <p>{{ $userRequest->city->name ?? ''}} • {{ $userRequest->district?->name ?? '-' }}</p>
+            <h3 class="text-lg font-semibold">City</h3>
+            <p>{{ $userRequest->city->name ?? ''}}</p>
         </div>
 
         <div class="mb-4">

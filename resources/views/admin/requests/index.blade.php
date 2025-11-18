@@ -22,7 +22,6 @@
 
             @include('admin.requests.search_form', [
                 'allStatuses' => $allStatuses,
-                'allDistricts' => $allDistricts,
             ])
 
             <div class="bg-white overflow-hidden shadow-lg rounded-lg">
@@ -69,7 +68,7 @@
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    {{ $request->city?->name ? ($request->city?->name . ' | ') : ''  }} {{ $request->district?->name ? ($request->district?->name . ' | ') : ''  }}
+                                    {{ $request->city?->name ? ($request->city?->name . ' | ') : ''  }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                     {{ $request->user?->full_name ?? 'N/A' }}

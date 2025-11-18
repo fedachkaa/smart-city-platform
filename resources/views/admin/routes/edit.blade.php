@@ -45,7 +45,7 @@
                                         {{ $object->name }}
                                     </a>
                                     <span class="text-gray-500 text-sm">
-                                        ({{ $object->city->name ?? '' }}{{ $object->district ? ', ' . $object->district->name : '' }})
+                                        ({{ $object->city->name ?? '' }})
                                     </span>
                                 </li>
                             @endforeach

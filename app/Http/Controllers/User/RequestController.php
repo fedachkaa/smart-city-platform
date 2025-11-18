@@ -28,7 +28,7 @@ class RequestController extends Controller
      */
     public function show(UserRequest $userRequest)
     {
-        $userRequest->load(['city', 'district', 'infrastructureObject']);
+        $userRequest->load(['city', 'infrastructureObject']);
 
         return view('user.partials.show-request', compact('userRequest'))->render();
     }
@@ -53,7 +53,7 @@ class RequestController extends Controller
         $perPage = 10;
         $page = $request->input('page', 1);
 
-        $requests = UserRequest::with(['city', 'district', 'infrastructureObject'])
+        $requests = UserRequest::with(['city', 'infrastructureObject'])
             ->where('user_id', auth()->id())
             ->orderBy('created_at', 'desc')
             ->paginate($perPage, ['*'], 'page', $page);
@@ -75,10 +75,6 @@ class RequestController extends Controller
         $query = InfrastructureObject::query();
 
         $query->where('city_id', config('app.current_city_id'));
-
-        if ($request->filled('district_id')) {
-            $query->where('district_id', $request->district_id);
-        }
 
         $objects = $query->select('id', 'name', 'public_address')->get();
 
