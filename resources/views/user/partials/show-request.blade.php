@@ -43,7 +43,7 @@ $statusColor = match($userRequest->status) {
         @if($userRequest->photo)
             <div class="mb-4">
                 <h3 class="text-lg font-semibold">Photo</h3>
-                <img src="{{ asset('storage/' . $userRequest->photo) }}" alt="Request Photo" class="mt-2 max-w-full rounded">
+                <img src="{{ $userRequest->photo->secure_url }}" alt="{{ $userRequest->title }}" class="mt-2 rounded max-w-xl max-h-96 w-full object-contain">
             </div>
         @endif
     </div>

@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\UserRequestStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class UserRequest extends Model
 {
@@ -17,7 +18,6 @@ class UserRequest extends Model
         'description',
         'system_notes',
         'status',
-        'photo'
     ];
 
     /**
@@ -49,6 +49,14 @@ class UserRequest extends Model
     public function infrastructureObject(): BelongsTo
     {
         return $this->belongsTo(InfrastructureObject::class, 'infrastructure_object_id');
+    }
+
+    /**
+     * @return HasOne
+     */
+    public function photo(): HasOne
+    {
+        return $this->hasOne(CloudinaryMedia::class, 'user_request_id');
     }
 
     /**
