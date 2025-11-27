@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\City;
 use App\Models\User;
 use App\Models\UserRole;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -43,6 +44,8 @@ class RegistrationController extends Controller
         $validatedData['role_id'] = $guestRole->id;
 
         $user = User::create($validatedData);
+
+        event(new Registered($user));
 
         Auth::login($user);
 
