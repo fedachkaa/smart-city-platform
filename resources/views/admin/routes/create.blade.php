@@ -11,7 +11,7 @@
                 ← Back to List
             </a>
             <h1 class="text-3xl font-bold leading-tight text-gray-900">
-                Edit Service Route
+                Create Service Route
             </h1>
         </div>
         <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -38,7 +38,7 @@
                         @foreach($objects as $object)
                             <label class="flex items-center space-x-2 p-2 border rounded hover:bg-gray-50 cursor-pointer">
                                 <input type="checkbox" name="objects[]" value="{{ $object->id }}" class="js-object-checkbox">
-                                <span>{{ $object->name }} ({{ $object->city->name ?? '' }})</span>
+                                <span>{{ $object->name }} ({{ $object->public_address ?? '' }})</span>
                             </label>
                         @endforeach
                     </div>

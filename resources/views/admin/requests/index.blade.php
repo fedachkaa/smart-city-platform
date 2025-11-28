@@ -52,7 +52,6 @@
                             <tr>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm font-medium text-gray-900">{{ $request->title }}</div>
-                                    <div class="text-xs text-gray-500">{{ $request->status }}</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     @php
@@ -68,7 +67,7 @@
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    {{ $request->city?->name ? ($request->city?->name . ' | ') : ''  }}
+                                    {{ $request->city?->name ?? ''  }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                     {{ $request->user?->full_name ?? 'N/A' }}

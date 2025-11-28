@@ -62,6 +62,13 @@
                         </div>
                     </div>
 
+                    @if($request->photo)
+                        <div class="mt-6 bg-white p-6 rounded-lg shadow-md border-l-4 border-cyan-500">
+                            <h3 class="text-xl font-semibold text-gray-800 mb-4">Attached Photo</h3>
+                            <img src="{{ $request->photo->secure_url }}" alt="Request photo" class="max-h-96 rounded-lg shadow-md mx-auto object-contain">
+                        </div>
+                    @endif
+
                     <div class="mt-6 bg-white p-6 rounded-lg shadow-md border-l-4 border-cyan-500">
                         <h3 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">System Notes (Internal Use)</h3>
                         <label for="system_notes" class="block text-sm font-medium text-gray-700">System Notes</label>
