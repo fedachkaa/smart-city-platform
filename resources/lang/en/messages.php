@@ -57,6 +57,7 @@ return [
         'my_profile' => [
             'new_password_placeholder' => 'Leave blank to keep current',
             'updated_successfully' => 'Profile updated successfully',
+            'profile_photo' => 'Profile photo',
         ],
         'new_request' => [
             'title' => 'Create New Request',

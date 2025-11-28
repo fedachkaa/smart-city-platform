@@ -25,6 +25,7 @@ class CloudinaryMedia extends Model
         'resource_type',
         'file_type',
         'user_request_id',
+        'user_id',
     ];
 
     /**
@@ -33,5 +34,13 @@ class CloudinaryMedia extends Model
     public function request(): BelongsTo
     {
         return $this->belongsTo(UserRequest::class, 'user_request_id');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

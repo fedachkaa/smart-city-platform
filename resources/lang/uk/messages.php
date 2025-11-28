@@ -56,6 +56,7 @@ return [
         'my_profile' => [
             'new_password_placeholder' => 'Залиште порожнім, щоб зберегти поточний',
             'updated_successfully' => 'Профіль успішно оновлено',
+            'profile_photo' => 'Фото профілю',
         ],
         'new_request' => [
             'title' => 'Новий запит',

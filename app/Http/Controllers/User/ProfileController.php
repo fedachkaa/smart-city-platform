@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary as CloudinaryFacade;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -49,6 +50,23 @@ class ProfileController extends Controller
 
         if (!empty($validated['password'])) {
             $user->password = Hash::make($validated['password']);
+        }
+
+        if ($request->hasFile('photo')) {
+            $uploadedFile = $request->file('photo');
+
+            $cloudinaryUpload = CloudinaryFacade::uploadApi()->upload($uploadedFile->getRealPath(), [
+                'folder' => 'users',
+                'resource_type' => 'image',
+            ]);
+
+            $user->photo()->create([
+                'public_id' => $cloudinaryUpload['public_id'],
+                'secure_url' => $cloudinaryUpload['secure_url'],
+                'asset_id' => $cloudinaryUpload['asset_id'] ?? null,
+                'resource_type' => $cloudinaryUpload['resource_type'] ?? 'image',
+                'file_type' => $cloudinaryUpload['format'],
+            ]);
         }
 
         $user->save();

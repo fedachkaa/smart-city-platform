@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('asset_id')->nullable();
             $table->string('resource_type')->default('image');
             $table->string('file_type', 10)->nullable();
-            $table->foreignId('user_request_id')->constrained('user_requests')->onDelete('cascade');
+            $table->foreignId('user_request_id')->nullable()->constrained('user_requests')->nullOnDelete();
             $table->timestamps();
         });
     }

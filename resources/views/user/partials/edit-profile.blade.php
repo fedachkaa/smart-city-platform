@@ -1,7 +1,25 @@
 <h2 class="text-2xl font-bold text-gray-900 pb-3">{{ __('messages.profile.menu.my_profile') }}</h2>
 
-<form method="POST" action="{{ route('profile.update') }}" class="space-y-4">
+<form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data" class="space-y-4">
     @csrf
+
+    <div class="flex items-center space-x-6">
+        <div class="relative">
+            <img src="{{ $user->photo->secure_url ?? asset('images/avatar-placeholder.png') }}" alt="Profile photo" class="w-40 h-40 rounded-full object-cover border-4 border-gray-300 shadow-lg">
+        </div>
+
+        <div class="flex-1">
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+                {{ __('messages.profile.my_profile.profile_photo') }}
+            </label>
+
+            <input type="file" name="photo" accept="image/*" class="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-cyan-600 file:text-white hover:file:bg-cyan-700 cursor-pointer">
+
+            @error('photo')
+            <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+            @enderror
+        </div>
+    </div>
 
     <div class="flex space-x-4">
         <div class="flex-1">
