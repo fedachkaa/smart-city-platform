@@ -3,7 +3,7 @@
         <h1>Welcome, {{ $user->first_name }}!</h1>
         <p>Thank you for registering on our service. We are very happy to have you with us!</p>
         <br>
-        <x-mail::button url="https://github.com/">
+        <x-mail::button :url="$homepageUrl">
             Visit the Website
         </x-mail::button>
         <br>

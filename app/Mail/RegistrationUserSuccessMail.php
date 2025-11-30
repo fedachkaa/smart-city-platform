@@ -17,7 +17,7 @@ class RegistrationUserSuccessMail extends Mailable
     public $user;
 
     /** @var string */
-    public $url;
+    public $homepageUrl;
 
     /**
      * @param User $user
@@ -26,7 +26,7 @@ class RegistrationUserSuccessMail extends Mailable
     public function __construct(User $user)
     {
         $this->user = $user;
-        $this->url = route('homepage');
+        $this->homepageUrl = config('app.url');
     }
 
     /**
