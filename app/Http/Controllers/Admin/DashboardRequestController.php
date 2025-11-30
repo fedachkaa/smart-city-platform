@@ -31,6 +31,7 @@ class DashboardRequestController extends Controller
         $query = UserRequest::with('user', 'city');
 
         $query->searchByTitle($request->get('title'))
+            ->searchByCreator($request->get('created_by'))
             ->ofStatus($request->get('status'))
             ->where('city_id', config('app.current_city_id'));
 

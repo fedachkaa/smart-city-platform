@@ -18,6 +18,11 @@
                 </select>
             </div>
 
+            <div>
+                <label for="created_by" class="block text-sm font-medium text-gray-700">Created by</label>
+                <input type="text" name="created_by" id="created_by" value="{{ request('created_by') }}" placeholder="Search by name, email" class="p-2  mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm">
+            </div>
+
             <div class="flex space-x-2">
                 <button type="submit" class="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-cyan-600 hover:bg-cyan-700">
                     Search
