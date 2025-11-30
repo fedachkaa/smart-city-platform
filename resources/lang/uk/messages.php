@@ -82,6 +82,9 @@ return [
         ],
         'users' => [
             'deleted_successfully' => 'Користувача успішно видалено.',
-        ]
+        ],
+        'profile' => [
+            'updated_successfully' => 'Профіль успішно оновлено.',
+        ],
     ],
 ];

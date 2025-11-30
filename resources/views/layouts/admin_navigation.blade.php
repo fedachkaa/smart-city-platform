@@ -32,7 +32,7 @@
             </div>
 
             <div class="flex items-center">
-                <span class="text-sm text-gray-600 mr-4">{{ Auth::user()->first_name . ' ' . Auth::user()->last_name }}</span>
+                <a href="{{ route('dashboard.profile.edit') }}" class="text-sm text-gray-600 hover:text-gray-900 transition duration-150 mr-4 cursor-pointer" title="View profile">{{ Auth::user()->first_name . ' ' . Auth::user()->last_name }}</a>
                 <a href="{{ route('logout') ?? '#' }}" class="text-sm text-red-500 hover:text-red-700 transition duration-150 cursor-pointer">Logout</a>
             </div>
         </div>

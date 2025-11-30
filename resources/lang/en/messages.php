@@ -83,5 +83,8 @@ return [
         'users' => [
             'deleted_successfully' => 'User has been successfully deleted.',
         ],
+        'profile' => [
+            'updated_successfully' => 'Profile has been updated successfully.',
+        ],
     ],
 ];

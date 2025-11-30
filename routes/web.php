@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\DashboardProfileController;
 use App\Http\Controllers\Admin\DashboardRequestController;
 use App\Http\Controllers\Admin\DashboardRoutesController;
 use App\Http\Controllers\Admin\DashboardUserController;
@@ -42,6 +43,8 @@ Route::middleware(['auth', 'role:' . implode(',' , UserRole::ALLOWED_ADMIN_ROLES
         Route::resource('routes', DashboardRoutesController::class)->names('routes');
         Route::post('routes/preview', [DashboardRoutesController::class, 'previewRoute'])->name('routes.preview');
         Route::resource('users', DashboardUserController::class)->only(['index', 'edit', 'destroy'])->names('users');
+        Route::get('profile', [DashboardProfileController::class, 'edit'])->name('profile.edit');
+        Route::put('profile', [DashboardProfileController::class, 'update'])->name('profile.update');
     });
 });
 
