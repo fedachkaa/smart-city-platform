@@ -88,4 +88,28 @@ class User extends Authenticatable implements CanResetPasswordContract
     {
         return $this->hasOne(CloudinaryMedia::class, 'user_id');
     }
+
+    /**
+     * @return int
+     */
+    public function getNoRequestsAttribute(): int
+    {
+        return $this->requests()->count();
+    }
+
+    /**
+     * Scope a query to filter by first name, last name, full name, email
+     */
+    public function scopeSearchByNameEmail($query, $value)
+    {
+        if (!$value) {
+            return $query;
+        }
+
+        return $query->where('first_name', 'like', "%{$value}%")
+            ->orWhere('last_name', 'like', "%{$value}%")
+            ->orWhereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$value}%"])
+            ->orWhereRaw("CONCAT(last_name, ' ', first_name) LIKE ?", ["%{$value}%"])
+            ->orWhere('email', 'like', "%{$value}%");
+    }
 }

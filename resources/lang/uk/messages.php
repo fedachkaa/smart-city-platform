@@ -80,5 +80,8 @@ return [
             'updated_successfully' => 'Об’єкт інфраструктури успішно оновлено.',
             'deleted_successfully' => 'Об’єкт інфраструктури успішно видалено.',
         ],
+        'users' => [
+            'deleted_successfully' => 'Користувача успішно видалено.',
+        ]
     ],
 ];

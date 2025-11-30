@@ -80,5 +80,8 @@ return [
             'updated_successfully' => 'Infrastructure object updated successfully.',
             'deleted_successfully' => 'Infrastructure object deleted successfully.',
         ],
+        'users' => [
+            'deleted_successfully' => 'User has been successfully deleted.',
+        ],
     ],
 ];

@@ -6,7 +6,6 @@ use App\Enums\UserRequestStatus;
 use App\Http\Controllers\Controller;
 use App\Models\UserRequest;
 use App\Services\UserRequestService;
-use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -24,9 +23,10 @@ class DashboardRequestController extends Controller
     }
 
     /**
-     * @return Factory|View
+     * @param Request $request
+     * @return View
      */
-    public function index(Request $request)
+    public function index(Request $request): View
     {
         $query = UserRequest::with('user', 'city');
 
