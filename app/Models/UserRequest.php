@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\UserRequestStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class UserRequest extends Model
 {
@@ -17,7 +18,6 @@ class UserRequest extends Model
         'description',
         'system_notes',
         'status',
-        'photo'
     ];
 
     /**
@@ -52,6 +52,14 @@ class UserRequest extends Model
     }
 
     /**
+     * @return HasOne
+     */
+    public function photo(): HasOne
+    {
+        return $this->hasOne(CloudinaryMedia::class, 'user_request_id');
+    }
+
+    /**
      * Scope a query to filter by title.
      */
     public function scopeSearchByTitle($query, $title)
@@ -73,5 +81,23 @@ class UserRequest extends Model
         }
 
         return $query;
+    }
+
+    /**
+     * Scope a query to filter by creator (first name, last name, full name, email)
+     */
+    public function scopeSearchByCreator($query, $value)
+    {
+        if (!$value) {
+            return $query;
+        }
+
+        return $query->whereHas('user', function ($q) use ($value) {
+            $q->where('first_name', 'like', "%{$value}%")
+                ->orWhere('last_name', 'like', "%{$value}%")
+                ->orWhereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$value}%"])
+                ->orWhereRaw("CONCAT(last_name, ' ', first_name) LIKE ?", ["%{$value}%"])
+                ->orWhere('email', 'like', "%{$value}%");
+        });
     }
 }

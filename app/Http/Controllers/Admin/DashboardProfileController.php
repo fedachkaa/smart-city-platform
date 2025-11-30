@@ -1,15 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\User;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Services\UserService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
-class ProfileController extends Controller
+class DashboardProfileController extends Controller
 {
     /** @var UserService */
     private $userService;
@@ -25,18 +24,11 @@ class ProfileController extends Controller
     /**
      * @return View
      */
-    public function index(): View
-    {
-        return view('user.profile');
-    }
-
-    /**
-     * @return View
-     */
     public function edit(): View
     {
-        $user = Auth::user();
-        return view('user.profile.edit', compact('user'));
+        $admin = auth()->user();
+
+        return view('admin.profile.edit', compact('admin'));
     }
 
     /**
@@ -45,8 +37,8 @@ class ProfileController extends Controller
      */
     public function update(Request $request): RedirectResponse
     {
-        $this->userService->update(Auth::user(), $request);
+        $this->userService->update(auth()->user(), $request);
 
-        return redirect()->route('profile.index')->with('success', __('messages.profile.my_profile.registered_successfully'));
+        return redirect()->route('dashboard.profile.edit')->with('success', __('messages.dashboard.profile.updated_successfully'));
     }
 }

@@ -56,6 +56,7 @@ return [
         'my_profile' => [
             'new_password_placeholder' => 'Залиште порожнім, щоб зберегти поточний',
             'updated_successfully' => 'Профіль успішно оновлено',
+            'profile_photo' => 'Фото профілю',
         ],
         'new_request' => [
             'title' => 'Новий запит',
@@ -78,6 +79,12 @@ return [
             'created_successfully' => 'Об’єкт інфраструктури успішно створено.',
             'updated_successfully' => 'Об’єкт інфраструктури успішно оновлено.',
             'deleted_successfully' => 'Об’єкт інфраструктури успішно видалено.',
+        ],
+        'users' => [
+            'deleted_successfully' => 'Користувача успішно видалено.',
+        ],
+        'profile' => [
+            'updated_successfully' => 'Профіль успішно оновлено.',
         ],
     ],
 ];

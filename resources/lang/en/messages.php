@@ -57,6 +57,7 @@ return [
         'my_profile' => [
             'new_password_placeholder' => 'Leave blank to keep current',
             'updated_successfully' => 'Profile updated successfully',
+            'profile_photo' => 'Profile photo',
         ],
         'new_request' => [
             'title' => 'Create New Request',
@@ -78,6 +79,12 @@ return [
             'created_successfully' => 'Infrastructure object created successfully.',
             'updated_successfully' => 'Infrastructure object updated successfully.',
             'deleted_successfully' => 'Infrastructure object deleted successfully.',
+        ],
+        'users' => [
+            'deleted_successfully' => 'User has been successfully deleted.',
+        ],
+        'profile' => [
+            'updated_successfully' => 'Profile has been updated successfully.',
         ],
     ],
 ];

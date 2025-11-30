@@ -4,21 +4,21 @@ namespace App\Providers;
 
 use App\Listeners\SendRegistrationUserEmail;
 use Illuminate\Auth\Events\Registered;
-use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 
-class AppServiceProvider extends ServiceProvider
+class EventServiceProvider extends ServiceProvider
 {
     /**
-     * Register any application services.
+     * @var array
      */
-    public function register(): void
-    {
-        //
-    }
+    protected $listen = [
+        Registered::class => [
+            SendRegistrationUserEmail::class,
+        ],
+    ];
 
     /**
-     * Bootstrap any application services.
+     * @return void
      */
     public function boot(): void
     {

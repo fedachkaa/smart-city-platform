@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Enums\UserRequestStatus;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary as CloudinaryFacade;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
@@ -35,17 +36,29 @@ class UserRequestService
             'description' => 'nullable|string',
             'city_id' => ['required', Rule::exists('cities', 'id')],
             'infrastructure_object_id' => ['nullable', Rule::exists('infrastructure_objects', 'id')],
-            'photo' => 'nullable|image|max:2048',
         ]);
-
-        if ($request->hasFile('photo')) {
-            $validated['photo_path'] = $request->file('photo')->store('requests', 'public');
-        }
-
         $validated['user_id'] = Auth::id();
         $validated['status'] = UserRequestStatus::New;
 
         $userRequest = UserRequest::create($validated);
+
+        if ($request->hasFile('photo')) {
+            $uploadedFile = $request->file('photo');
+
+
+            $cloudinaryUpload = CloudinaryFacade::uploadApi()->upload($uploadedFile->getRealPath(), [
+                'folder' => 'user_requests',
+                'resource_type' => 'image',
+            ]);
+
+            $userRequest->photo()->create([
+                'public_id' => $cloudinaryUpload['public_id'],
+                'secure_url' => $cloudinaryUpload['secure_url'],
+                'asset_id' => $cloudinaryUpload['asset_id'] ?? null,
+                'resource_type' => $cloudinaryUpload['resource_type'] ?? 'image',
+                'file_type' => $cloudinaryUpload['format'],
+            ]);
+        }
 
         $this->triggerN8nUserRequestCreated($userRequest);
 
