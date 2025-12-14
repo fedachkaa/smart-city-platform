@@ -122,6 +122,7 @@ class DashboardRoutesController extends Controller
     public function previewRoute(Request $request): JsonResponse
     {
         $validated = $request->validate([
+            'start_time' => 'required|string',
             'start_point' => ['required', 'regex:/^-?\d{1,3}\.\d+,\s*-?\d{1,3}\.\d+$/'],
             'object_ids' => 'required|array|min:1|max:5',
             'object_ids.*' => 'exists:infrastructure_objects,id',
@@ -136,7 +137,7 @@ class DashboardRoutesController extends Controller
         $objects = InfrastructureObject::whereIn('id', $validated['object_ids'])->get();
 
         try {
-            $routeData = $this->routeOptimizerService->buildOptimizedRoute($validated['start_location'], $objects);
+            $routeData = $this->routeOptimizerService->buildOptimizedRoute($validated['start_location'], $validated['start_time'], $objects);
             return response()->json([
                 'success' => true,
                 'route' => $routeData,

@@ -60,7 +60,8 @@ document.addEventListener('DOMContentLoaded', () => {
             },
             body: JSON.stringify({
                 object_ids: selectedObjects,
-                start_point: start
+                start_point: start,
+                start_time: document.getElementById('start_time').value
             })
         });
         const data = await response.json();
@@ -156,15 +157,23 @@ function renderRoute(route) {
         map
     });
 
+    const bounds = new google.maps.LatLngBounds();
+
     route.legs.forEach((leg, index) => {
-        addMarker(
-            leg.end_location,
-            route.optimized_order.includes(index) ? `Stop ${index + 1}` : 'Start',
-            leg.end_address || ''
-        );
+        const lat = leg.endLocation.latLng.latitude;
+        const lng = leg.endLocation.latLng.longitude;
+
+        reverseGeocode({ lat, lng }, (address) => {
+            addMarker(
+                { lat, lng },
+                route.legs.length - 1 === index ?  'Start/Finish' : `Stop ${index + 1}`,
+                address
+            );
+        });
+
+        bounds.extend(new google.maps.LatLng(lat, lng));
     });
 
-    const bounds = new google.maps.LatLngBounds();
     decodedPath.forEach(p => bounds.extend(p));
     map.fitBounds(bounds);
 }

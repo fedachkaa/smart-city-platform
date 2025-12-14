@@ -42,4 +42,8 @@ return [
     'google_maps' => [
         'key' => env('GOOGLE_MAPS_API_KEY'),
     ],
+
+    'google' => [
+        'project_id' => env('GOOGLE_PROJECT_ID'),
+    ]
 ];

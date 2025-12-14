@@ -2,48 +2,172 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\Http;
+use GuzzleHttp\Client;
+use Google\Auth\ApplicationDefaultCredentials;
+use GuzzleHttp\Exception\GuzzleException;
+
 
 class RouteOptimizerService
 {
-    protected string $apiKey;
+    /** @var Client */
+    private $client;
+
+    /** @var string */
+    private $token;
+
+    /** @var string */
+    private $projectId;
 
     public function __construct()
     {
-        $this->apiKey = config('services.google_maps.key');
+        $credentials = ApplicationDefaultCredentials::getCredentials( ['https://www.googleapis.com/auth/cloud-platform']);
+
+        $this->token = $credentials->fetchAuthToken()['access_token'];
+        $this->client = new Client();
+        $this->projectId = config('services.google.project_id');
     }
 
     /**
      * @param array $startLocation
+     * @param string $startTime
      * @param $objects
      * @return array
-     * @throws \Exception
+     * @throws GuzzleException
      */
-    public function buildOptimizedRoute(array $startLocation, $objects): array
+    public function buildOptimizedRoute(array $startLocation, string $startTime, $objects): array
     {
-        $origin = "{$startLocation['lat']},{$startLocation['lng']}";
-        $waypoints = $objects->map(fn($o) => "{$o->latitude},{$o->longitude}")->implode('|');
+        $objectMap = $objects->keyBy(fn ($o) => 'object_' . $o->id);
 
-        $response = Http::get('https://maps.googleapis.com/maps/api/directions/json', [
-            'origin' => $origin,
-            'destination' => $origin,
-            'waypoints' => "optimize:true|{$waypoints}",
-            'key' => $this->apiKey,
-        ]);
-
-        if ($response->failed()) {
-            throw new \Exception('Can not build route via Google Maps API. Status: ' . $response->status() . ', response body: ' . $response->body());
+        $shipments = [];
+        foreach ($objects as $object) {
+            $shipments[] = [
+                'label' => 'object_' . $object->id,
+                'pickups' => [
+                    [
+                        'arrivalWaypoint' => [
+                            'location' => [
+                                'latLng' => [
+                                    'latitude' => $object->latitude,
+                                    'longitude' => $object->longitude,
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ];
         }
 
-        $data = $response->json();
+        $body = [
+            'timeout' => '10s',
+            'model' => [
+                'shipments' => $shipments,
+                'vehicles' => [
+                    [
+                        'label' => 'vehicle_1',
+                        'startWaypoint' => [
+                            'location' => [
+                                'latLng' => [
+                                    'latitude' => $startLocation['lat'],
+                                    'longitude' => $startLocation['lng'],
+                                ]
+                            ]
+                        ],
+                        'endWaypoint' => [
+                            'location' => [
+                                'latLng' => [
+                                    'latitude' => $startLocation['lat'],
+                                    'longitude' => $startLocation['lng'],
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ];
 
-        $optimizedOrder = $data['routes'][0]['waypoint_order'] ?? [];
-        $legs = $data['routes'][0]['legs'] ?? [];
+        $response = $this->client->post(
+            "https://routeoptimization.googleapis.com/v1/projects/{$this->projectId}:optimizeTours",
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $this->token,
+                    'Content-Type' => 'application/json',
+                ],
+                'json' => $body
+            ]
+        );
+
+        $result = json_decode($response->getBody(), true);
+
+        $orderedObjects = [];
+        $optimizedOrder = [];
+
+        foreach ($result['routes'][0]['visits'] as $visit) {
+            $label = $visit['shipmentLabel'];
+            if (isset($objectMap[$label])) {
+                $orderedObjects[] = $objectMap[$label];
+                $optimizedOrder[] = $objectMap[$label]->id;
+            }
+        }
+
+        $route = $this->getRoutePolyline($startLocation, $orderedObjects);
 
         return [
             'optimized_order' => $optimizedOrder,
-            'legs' => $legs,
-            'polyline' => $data['routes'][0]['overview_polyline']['points'] ?? null,
+            'legs' => $route['legs'] ?? [],
+            'polyline' => $route['polyline']['encodedPolyline'] ?? null,
         ];
+    }
+
+    /**
+     * @param array $startLocation
+     * @param array $orderedObjects
+     * @return array
+     * @throws GuzzleException
+     */
+    private function getRoutePolyline(array $startLocation, array $orderedObjects): array
+    {
+        $waypoints = array_map(fn($o) => [
+            'location' => [
+                'latLng' => [
+                    'latitude' => $o->latitude,
+                    'longitude' => $o->longitude,
+                ]
+            ]
+        ], $orderedObjects);
+
+        $routesResponse = $this->client->post(
+            'https://routes.googleapis.com/directions/v2:computeRoutes',
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $this->token,
+                    'Content-Type' => 'application/json',
+                    'X-Goog-FieldMask' => 'routes.polyline.encodedPolyline,routes.legs'
+                ],
+                'json' => [
+                    'origin' => [
+                        'location' => [
+                            'latLng' => [
+                                'latitude' => $startLocation['lat'],
+                                'longitude' => $startLocation['lng'],
+                            ]
+                        ]
+                    ],
+                    'destination' => [
+                        'location' => [
+                            'latLng' => [
+                                'latitude' => $startLocation['lat'],
+                                'longitude' => $startLocation['lng'],
+                            ]
+                        ]
+                    ],
+                    'intermediates' => $waypoints,
+                    'travelMode' => 'DRIVE'
+                ]
+            ]
+        );
+
+        $data = json_decode($routesResponse->getBody(), true);
+
+        return $data['routes'][0] ?? [];
     }
 }
