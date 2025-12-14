@@ -52,7 +52,6 @@ Route::middleware(['auth', 'role:' . UserRole::USER_ROLE_GUEST])->prefix('profil
     Route::get('/', [ProfileController::class, 'index'])->name('index');
     Route::post('profile', [ProfileController::class, 'update'])->name('update');
 
-    Route::get('requests/create', [RequestController::class, 'create'])->name('requests.create');
     Route::post('requests', [RequestController::class, 'store'])->name('requests.store');
     Route::get('requests/{userRequest}', [RequestController::class, 'show'])->name('profile.requests.show');
     Route::get('api/requests', [RequestController::class, 'getRequests'])->name('profile.api.requests');

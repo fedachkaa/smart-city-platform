@@ -45,7 +45,6 @@ class UserRequestService
         if ($request->hasFile('photo')) {
             $uploadedFile = $request->file('photo');
 
-
             $cloudinaryUpload = CloudinaryFacade::uploadApi()->upload($uploadedFile->getRealPath(), [
                 'folder' => 'user_requests',
                 'resource_type' => 'image',

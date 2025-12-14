@@ -22,6 +22,7 @@ function renderRoute(route) {
 
     const decodedPath = google.maps.geometry.encoding.decodePath(route.polyline);
 
+    if (routePolyline) routePolyline.setMap(null);
     routePolyline = new google.maps.Polyline({
         path: decodedPath,
         strokeColor: '#06b6d4',
@@ -32,20 +33,20 @@ function renderRoute(route) {
 
     const bounds = new google.maps.LatLngBounds();
 
-    if (route.start_point && Array.isArray(route.start_point)) {
-        addMarker({ lat: route.start_point.lat, lng: route.start_point.lng }, 'Start', 'Start Point');
-        bounds.extend(new google.maps.LatLng(route.start_point.lat, route.start_point.lng));
-    }
+    route.legs.forEach((leg, index) => {
+        const lat = leg.endLocation.latLng.latitude;
+        const lng = leg.endLocation.latLng.longitude;
 
-    if (route.legs && Array.isArray(route.legs)) {
-        route.legs.forEach((leg, index) => {
+        reverseGeocode({ lat, lng }, (address) => {
             addMarker(
-                leg.end_location,
-                route.optimized_order.includes(index) ? `Stop ${index + 1}` : 'Start',
-                leg.end_address || ''
+                { lat, lng },
+                route.legs.length - 1 === index ?  'Start/Finish' : `Stop ${index + 1}`,
+                address
             );
         });
-    }
+
+        bounds.extend(new google.maps.LatLng(lat, lng));
+    });
 
     decodedPath.forEach(p => bounds.extend(p));
     map.fitBounds(bounds);
@@ -67,4 +68,15 @@ function addMarker(latLng, title = '', address = '') {
     });
 
     markers.push(marker);
+}
+
+function reverseGeocode(latLng, callback) {
+    const geocoder = new google.maps.Geocoder();
+    geocoder.geocode({ location: latLng }, (results, status) => {
+        if (status === "OK" && results[0]) {
+            callback(results[0].formatted_address);
+        } else {
+            callback(`${latLng.lat().toFixed(6)}, ${latLng.lng().toFixed(6)}`);
+        }
+    });
 }
